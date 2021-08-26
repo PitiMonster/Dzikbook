@@ -2,7 +2,7 @@ const SHA256 = require('crypto-js/sha256');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('./../User/model');
-const catcher = require('./../utils/appError');
+const AppError = require('./../utils/appError');
 
 exports.protect = catchAsync((req, res, next) => {
   // 1) Check if token provided in headers
