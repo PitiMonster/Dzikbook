@@ -1,0 +1,25 @@
+MODELS:
+1. Users
+2. Posts
+3. Relations
+4. Exercises
+5. Meals
+6. Workout plans
+7. Diet plans
+8. Notifications
+
+
+Users realtions:
+ -> Posts - 1 to MANY
+ -> Relations - 1 to MANY
+ -> Exercises (my own exercise) - 1 to MANY
+ -> Meals (my own meals) - 1 to MANY
+ -> Workouts - MANY to MANY
+ -> Diets - MANY to MANY
+ -> Notifications - 1 to MANY
+
+Exercises relations:
+ -> Workouts - MANY to MANY
+
+Meals relations:
+ -> Diets - MANY to MANY
