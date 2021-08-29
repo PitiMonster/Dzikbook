@@ -1,10 +1,11 @@
 const express = require('express');
 const { route } = require('../app');
 const userController = require('./controller');
+const authController = require('./../controllers/authController');
 
 const router = express.Router();
 
-router.post('/signup');
+router.post('/signup', authController.signup);
 router.post('/login');
 router.post('/forgotPassword');
 router.patch('/resetPassword/:token');
