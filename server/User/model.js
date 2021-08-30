@@ -64,6 +64,12 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+userSchema.virtual('relations', {
+  ref: 'Relation',
+  localField: '_id',
+  foreignField: 'users',
+});
+
 // Virtual populate
 // Get all user's posts
 userSchema.virtual('posts', {

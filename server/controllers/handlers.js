@@ -61,8 +61,9 @@ exports.getOne = (Model, popObject) =>
 exports.getAll = (Model, ...popObjects) =>
   catchAsync(async (req, res, next) => {
     let filter = {};
-    // filter data by userId param
+    // create filter object based on provided url params
     if (req.params.userId) filter['author'] = req.params.userId;
+    if (req.params.relationStatus) filter['status'] = req.params.relationStatus;
     console.log(filter);
     const query = Model.find(filter).select('-__v');
     let docs;
