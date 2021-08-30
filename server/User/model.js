@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Password is required'],
+    select: false,
   },
   passwordConfirm: {
     type: String,
@@ -82,6 +83,20 @@ userSchema.pre('save', async function (next) {
 // check if user's password is equal provided password
 userSchema.methods.correctPassword = (providedPassword, userPassword) =>
   SHA256(providedPassword) === userPassword;
+
+// check if provided JWT was not generated before password change
+userSchema.methods.passwordChangedAfter = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    return JWTTimestamp < changedTimestamp;
+  }
+
+  // false means NOT changed
+  return false;
+};
 
 const User = mongoose.model('User', userSchema);
 

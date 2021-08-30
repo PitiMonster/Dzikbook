@@ -1,6 +1,7 @@
 const catchAsync = require('./../utils/catchAsync');
 // const APIFeatures = require('./../utils/APIFeatures')
 
+// delete object of given Model assigned to req.params.id
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const doc = await Model.findByIdAndDelete(req.params.id);
@@ -17,6 +18,7 @@ exports.deleteOne = (Model) =>
     });
   });
 
+// update object of given Model assigned to req.params.id with req.body data
 exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const doc = await Model.findByIdAndUpdate(req.params.id, req, body, {
@@ -31,6 +33,7 @@ exports.updateOne = (Model) =>
     res.status(200).json({ status: 'success', data: { data: doc } });
   });
 
+// create object of given Model with req.body data
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const doc = await Model.create(req.body);
@@ -38,15 +41,25 @@ exports.createOne = (Model) =>
     res.status(201).json({ status: 'success', data: { data: doc } });
   });
 
+// get object of given Model assigned to req.params.id
+// popObject - contains path for fields to populate
 exports.getOne = (Model, popObject) =>
   catchAsync(async (req, res, next) => {
     let query = Model.findById(req.params.id);
     if (popObject) query = query.populate(popObject);
-    const doc = await query;
+    const doc = await query.select('-__v');
 
     if (!doc) {
       return next(new AppError('No document found with that id'));
     }
 
     res.status(200).json({ status: 'success', data: { data: doc } });
+  });
+
+// get all objects of given Model
+exports.getAll = (Model) =>
+  catchAsync(async (req, res, next) => {
+    const docs = await Model.find().select('-__v');
+
+    res.status(200).json({ status: 'success', data: { data: docs } });
   });
