@@ -23,9 +23,12 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     validate: [validator.isEmail, 'Please provide a valid email!'],
   },
-  photo: {
-    type: String,
-  },
+  profilePhotos: [
+    {
+      type: String,
+    },
+  ],
+  photos: [{ String }],
   role: {
     type: String,
     enum: ['user', 'admin'],
@@ -59,6 +62,14 @@ const userSchema = new mongoose.Schema({
       select: false,
     },
   },
+});
+
+// Virtual populate
+// Get all user's posts
+userSchema.virtual('posts', {
+  ref: 'Post',
+  localField: '_id', // find posts where '_id'
+  foreignField: 'author', // is equal to 'author'
 });
 
 // encrypt the user's password with SHA256 algorithm
