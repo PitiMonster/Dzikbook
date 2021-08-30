@@ -12,14 +12,15 @@ router.use(authController.protect);
 
 router
   .route('/')
-  .post(authController.restrictTo('user'), postController.setAuthorId);
-
-// check if author of post is the one who performs this action
-router.use(postController.isAuthor);
+  .post(
+    authController.restrictTo('user'),
+    postController.setAuthorId,
+    postController.createPost
+  );
 
 router
   .route('/:id')
-  .patch(postController.updatePost)
-  .delete(postController.deletePost);
+  .patch(postController.isAuthor, postController.updatePost)
+  .delete(postController.isAuthor, postController.deletePost);
 
 module.exports = router;

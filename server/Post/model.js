@@ -13,6 +13,7 @@ const postSchema = new mongoose.Schema({
     type: String,
     default: 'public',
     enum: ['private', 'friends', 'public'],
+    select: false,
   },
   createdAt: {
     type: Date,
@@ -22,7 +23,9 @@ const postSchema = new mongoose.Schema({
 });
 
 postSchema.methods.isAuthor = function (userId) {
-  return userId === this.author;
+  console.log(typeof userId);
+  console.log(typeof this.author);
+  return userId === this.author.toString();
 };
 
 const Post = mongoose.model('Post', postSchema);

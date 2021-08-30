@@ -1,4 +1,5 @@
 const catchAsync = require('./../utils/catchAsync');
+const AppError = require('./../utils/appError');
 // const APIFeatures = require('./../utils/APIFeatures')
 
 // delete object of given Model assigned to req.params.id
@@ -21,13 +22,13 @@ exports.deleteOne = (Model) =>
 // update object of given Model assigned to req.params.id with req.body data
 exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.findByIdAndUpdate(req.params.id, req, body, {
+    const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
 
     if (!doc) {
-      return next(new AppError('Nod document found with that id', 404));
+      return next(new AppError('No document found with that id', 404));
     }
 
     res.status(200).json({ status: 'success', data: { data: doc } });
@@ -57,13 +58,20 @@ exports.getOne = (Model, popObject) =>
   });
 
 // get all objects of given Model
-exports.getAll = (Model) =>
+exports.getAll = (Model, ...popObjects) =>
   catchAsync(async (req, res, next) => {
     let filter = {};
     // filter data by userId param
     if (req.params.userId) filter['author'] = req.params.userId;
     console.log(filter);
-    const docs = await Model.find(filter).select('-__v');
+    const query = Model.find(filter).select('-__v');
+    let docs;
+    if (popObjects.length > 0) {
+      for (popObject of popObjects) {
+        query.populate(popObject);
+      }
+      docs = await query;
+    } else docs = await query;
 
     res.status(200).json({ status: 'success', data: { data: docs } });
   });
