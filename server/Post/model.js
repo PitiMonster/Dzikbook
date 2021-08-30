@@ -21,6 +21,10 @@ const postSchema = new mongoose.Schema({
   images: [String],
 });
 
+postSchema.methods.isAuthor = function (userId) {
+  return userId === this.author;
+};
+
 const Post = mongoose.model('Post', postSchema);
 
 module.exports = Post;

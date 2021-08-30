@@ -59,7 +59,11 @@ exports.getOne = (Model, popObject) =>
 // get all objects of given Model
 exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
-    const docs = await Model.find().select('-__v');
+    let filter = {};
+    // filter data by userId param
+    if (req.params.userId) filter['author'] = req.params.userId;
+    console.log(filter);
+    const docs = await Model.find(filter).select('-__v');
 
     res.status(200).json({ status: 'success', data: { data: docs } });
   });

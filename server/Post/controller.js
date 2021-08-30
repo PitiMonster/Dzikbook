@@ -1,0 +1,23 @@
+const Post = require('./model');
+const AppError = require('./../utils/appError');
+const catchAsync = require('./../utils/catchAsync');
+const crudHandlers = require('./../controllers/handlers');
+
+exports.setAuthorId = (req, res, next) => {
+  if (!req.body.author) req.body.author = req.params.userId;
+  next();
+};
+
+exports.isAuthor = catchAsync(async (req, res, next) => {
+  const post = await Post.findById(req.params.id);
+  if (!post.isAuthor()) {
+    next(new AppError('You are not authorized to update this post!', 401));
+  }
+  next();
+});
+
+exports.getAllPosts = crudHandlers.getAll(Post);
+exports.getPost = crudHandlers.getOne(Post);
+exports.createPost = crudHandlers.createOne(Post);
+exports.updatePost = crudHandlers.updateOne(Post);
+exports.deletePost = crudHandlers.deleteOne(Post);

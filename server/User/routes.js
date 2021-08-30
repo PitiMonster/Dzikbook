@@ -2,8 +2,12 @@ const express = require('express');
 const { route } = require('../app');
 const userController = require('./controller');
 const authController = require('./../controllers/authController');
+const postsRouter = require('./../Post/routes');
 
 const router = express.Router();
+
+// connect posts` router to user router
+router.use('/:userId/posts', postsRouter);
 
 router.post('/signup', authController.signUp);
 router.post('/signin', authController.signIn);
