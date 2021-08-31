@@ -22,6 +22,7 @@ exports.deleteOne = (Model) =>
 // update object of given Model assigned to req.params.id with req.body data
 exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
+    console.log(req.body);
     const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
@@ -63,7 +64,10 @@ exports.getAll = (Model, ...popObjects) =>
     let filter = {};
     // create filter object based on provided url params
     if (req.params.userId) filter['author'] = req.params.userId;
-    if (req.params.relationStatus) filter['status'] = req.params.relationStatus;
+    if (req.params.requestStatus) {
+      if (req.params.requestStatus === 'sent') filter['sender'] = req.user.id;
+      else filter['receiver'] = req.user.id;
+    }
     console.log(filter);
     const query = Model.find(filter).select('-__v');
     let docs;

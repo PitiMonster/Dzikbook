@@ -8,5 +8,8 @@ exports.getMe = (req, res, next) => {
   next();
 };
 
-exports.getUser = crudHandlers.getOne(User);
+exports.getUser = crudHandlers.getOne(User, {
+  path: 'relations',
+  select: 'name surname username profilePhotos',
+});
 exports.getAllUsers = crudHandlers.getAll(User);

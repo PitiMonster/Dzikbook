@@ -1,6 +1,7 @@
 const express = require('express');
 const relationController = require('./controller');
 const authController = require('./../controllers/authController');
+const filterObj = require('../utils/filterReqBody');
 
 const router = express.Router();
 
@@ -17,6 +18,12 @@ router
   .get(relationController.getAllRelations);
 
 // patch - update status of relation found by ID
-router.route('/:id').patch(relationController.updateRelationStatus);
+router
+  .route('/:id')
+  .patch(
+    filterObj('status'),
+    relationController.isPermittedToUpdateRelation,
+    relationController.updateRelationStatus
+  );
 
 module.exports = router;

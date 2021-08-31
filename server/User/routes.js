@@ -4,6 +4,7 @@ const userController = require('./controller');
 const authController = require('./../controllers/authController');
 const postsRouter = require('./../Post/routes');
 const relationsRouter = require('./../Relation/routes');
+const acquaintanceRouter = require('./../Acquaintance/routes');
 
 const router = express.Router();
 
@@ -12,6 +13,8 @@ router.use('/:userId/posts', postsRouter);
 
 // connect relations' router to user routet
 router.use('/:userId/relations', relationsRouter);
+
+router.use('/:userId/friends', acquaintanceRouter);
 
 router.post('/signup', authController.signUp);
 router.post('/signin', authController.signIn);

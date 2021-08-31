@@ -3,72 +3,72 @@ const SHA256 = require('crypto-js/sha256');
 const slugify = require('slugify');
 const validator = require('validator');
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'User name is required'],
-  },
-  surname: {
-    type: String,
-    required: [true, 'User surname is required'],
-  },
-  username: {
-    type: String,
-    unique: true,
-  },
-  email: {
-    type: String,
-    required: [true, 'User email is required'],
-    unique: true,
-    lowercase: true,
-    validate: [validator.isEmail, 'Please provide a valid email!'],
-  },
-  profilePhotos: [
-    {
+const userSchema = new mongoose.Schema(
+  {
+    name: {
       type: String,
+      required: [true, 'User name is required'],
     },
-  ],
-  photos: [{ String }],
-  role: {
-    type: String,
-    enum: ['user', 'admin'],
-    default: 'user',
-  },
-  password: {
-    type: String,
-    required: [true, 'Password is required'],
-    select: false,
-  },
-  passwordConfirm: {
-    type: String,
-    required: [true, 'Password confirm is required'],
-    validate: {
-      validator: function (val) {
-        return val === this.password;
+    surname: {
+      type: String,
+      required: [true, 'User surname is required'],
+    },
+    username: {
+      type: String,
+      unique: true,
+    },
+    email: {
+      type: String,
+      required: [true, 'User email is required'],
+      unique: true,
+      lowercase: true,
+      validate: [validator.isEmail, 'Please provide a valid email!'],
+    },
+    profilePhotos: [
+      {
+        type: String,
       },
-      message: 'Password confirmation differs from password',
+    ],
+    photos: [{ String }],
+    role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user',
     },
-    passwordChangedAt: Date,
-    passwordResetToken: String,
-    passwordResetExpires: Date,
-    active: {
-      type: Boolean,
-      default: true,
+    password: {
+      type: String,
+      required: [true, 'Password is required'],
       select: false,
     },
-    isNew: {
-      type: Boolean,
-      default: true,
-      select: false,
+    passwordConfirm: {
+      type: String,
+      required: [true, 'Password confirm is required'],
+      validate: {
+        validator: function (val) {
+          return val === this.password;
+        },
+        message: 'Password confirmation differs from password',
+      },
+      passwordChangedAt: Date,
+      passwordResetToken: String,
+      passwordResetExpires: Date,
+      active: {
+        type: Boolean,
+        default: true,
+        select: false,
+      },
+      isNew: {
+        type: Boolean,
+        default: true,
+        select: false,
+      },
     },
   },
-});
-
-userSchema.virtual('relations', {
-  ref: 'Relation',
-  localField: '_id',
-  foreignField: 'users',
-});
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
 
 // Virtual populate
 // Get all user's posts

@@ -6,12 +6,10 @@ const relationSchema = mongoose.Schema(
     sender: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
-      required: [true, 'Relation must have sender'],
     },
     receiver: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
-      required: [true, 'Relation must have receiver'],
       validate: {
         validator: function (val) {
           console.log(typeof val);
@@ -21,6 +19,14 @@ const relationSchema = mongoose.Schema(
         message: 'User can not be in relation to himself',
       },
     },
+    users: {
+      type: Map,
+      of: {
+        type: 'ObjectId',
+        ref: 'User',
+      },
+      default: {},
+    },
     createdAt: {
       type: Date,
       default: Date.now(),
@@ -28,7 +34,7 @@ const relationSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['sent', 'accepted', 'rejected', 'deleted'],
+      enum: ['sent', 'accepted', 'deleted'],
       default: 'sent',
     },
   },
@@ -38,9 +44,27 @@ const relationSchema = mongoose.Schema(
   }
 );
 
-relationSchema.virtual('users').get(function () {
-  return [this.sender, this.receiver];
+relationSchema.post('save', function (doc, next) {
+  if (doc.receiver && doc.sender) {
+    doc.users.set('sender', doc.sender);
+    doc.users.set('receiver', doc.receiver);
+    doc.sender = undefined;
+    doc.receiver = undefined;
+    doc.save({ validateBeforeSave: false });
+  }
+  next();
 });
+
+relationSchema.methods.isPermittedToUpdate = function (user) {
+  console.log(typeof this.status);
+  if (this.status === 'sent') {
+    return user.toString() === this.users.get('receiver').toString();
+  } else {
+    return Object.values(this.users).some(
+      (el) => el.toString() === user.toString()
+    );
+  }
+};
 
 const Relation = mongoose.model('Relation', relationSchema);
 

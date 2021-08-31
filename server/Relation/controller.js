@@ -8,6 +8,20 @@ exports.setSender = (req, res, next) => {
   next();
 };
 
+exports.isPermittedToUpdateRelation = catchAsync(async (req, res, next) => {
+  const relation = await Relation.findById(req.params.id);
+  console.log(relation);
+  if (!relation) {
+    return next(new AppError('Relation with that ID does not exists', 404));
+  }
+
+  if (!relation.isPermittedToUpdate(req.user.id)) {
+    return next(new AppError('You are not permitted to update'));
+  }
+
+  next();
+});
+
 exports.getAllRelations = crudHandlers.getAll(
   Relation,
   { path: 'sender', select: 'name surname username profilePhotos' },
@@ -16,8 +30,5 @@ exports.getAllRelations = crudHandlers.getAll(
 
 exports.createRelation = crudHandlers.createOne(Relation);
 
-// TODO protect from updating other field than 'status'
-// TODO restrict to sender and receiver
 exports.updateRelationStatus = crudHandlers.updateOne(Relation);
-
 // TODO teraz nawalamy wyświetlanie friendsów i naprawienie populowania userów
