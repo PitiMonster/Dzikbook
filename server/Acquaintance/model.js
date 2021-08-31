@@ -14,11 +14,6 @@ const acquaintanceSchema = mongoose.Schema({
   },
 });
 
-acquaintanceSchema.post(/find/, function (docs, next) {
-  console.log(docs);
-  next();
-});
-
 const Acquaintance = mongoose.model('Acquaintance', acquaintanceSchema);
 
 module.exports = Acquaintance;

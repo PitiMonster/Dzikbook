@@ -10,7 +10,6 @@ exports.setSender = (req, res, next) => {
 
 exports.isPermittedToUpdateRelation = catchAsync(async (req, res, next) => {
   const relation = await Relation.findById(req.params.id);
-  console.log(relation);
   if (!relation) {
     return next(new AppError('Relation with that ID does not exists', 404));
   }

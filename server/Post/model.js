@@ -23,8 +23,6 @@ const postSchema = new mongoose.Schema({
 });
 
 postSchema.methods.isAuthor = function (userId) {
-  console.log(typeof userId);
-  console.log(typeof this.author);
   return userId === this.author.toString();
 };
 

@@ -12,8 +12,6 @@ const relationSchema = mongoose.Schema(
       ref: 'User',
       validate: {
         validator: function (val) {
-          console.log(typeof val);
-          console.log(typeof this.sender);
           return this.sender.toString() !== val.toString();
         },
         message: 'User can not be in relation to himself',
@@ -56,7 +54,6 @@ relationSchema.post('save', function (doc, next) {
 });
 
 relationSchema.methods.isPermittedToUpdate = function (user) {
-  console.log(typeof this.status);
   if (this.status === 'sent') {
     return user.toString() === this.users.get('receiver').toString();
   } else {

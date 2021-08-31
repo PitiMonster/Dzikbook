@@ -14,13 +14,11 @@ exports.getAllFriends = catchAsync(async (req, res, next) => {
       { 'users.receiver': req.params.userId },
     ];
   }
-  // TODO protect sending request to a friend or to already requested user
   console.log(filter);
   const docs = await Acquaintance.find(filter).select('-__v').populate('users');
 
   const friends = [];
   for (doc of docs) {
-    console.log(doc.users);
     if (doc.users.get('sender')._id === req.params.userId)
       friends.push(doc.push.users.get('sender'));
     else friends.push(doc.users.get('receiver'));
