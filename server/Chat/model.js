@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const messageSchema = {
+const messageSchema = new mongoose.Schema({
   author: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
@@ -18,9 +18,9 @@ const messageSchema = {
     enum: ['read', 'unread'],
     default: 'read',
   },
-};
+});
 
-const chatSchema = mongoose.Schema({
+const chatSchema = new mongoose.Schema({
   members: [
     {
       type: mongoose.Schema.ObjectId,

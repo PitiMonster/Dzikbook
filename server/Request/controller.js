@@ -3,6 +3,7 @@ const AppError = require('../utils/appError');
 const catchAsync = require('./../utils/catchAsync');
 const Request = require('./model');
 const Acquaintance = require('./../Acquaintance/model');
+const Chat = require('./../Chat/model');
 
 exports.setSender = (req, res, next) => {
   if (!req.body.sender) req.body.sender = req.user.id;
@@ -76,11 +77,16 @@ exports.answerTheRequest = catchAsync(async (req, res, next) => {
 
   switch (req.body.answer) {
     case 'accept':
-      // create acquaintance for these users and delete request
+      // create acquaintance, chat for these users and delete request
       const acquaintance = await Acquaintance.create({
         users: { sender: request.sender, receiver: request.receiver },
       });
       acquaintance.save();
+
+      const chat = await Chat.create({
+        members: [request.sender, request.receiver],
+      });
+      chat.save();
       await Request.findByIdAndDelete(request._id);
       break;
     case 'reject':

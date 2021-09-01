@@ -1,5 +1,5 @@
 const express = require('express');
-const chatControllers = require('./controllers');
+const chatController = require('./controller');
 const authController = require('./../controllers/authController');
 
 const router = express.Router();
@@ -7,8 +7,16 @@ const router = express.Router();
 router.use(authController.protect);
 
 // create chat
-router.route('/').post();
+router
+  .route('/')
+  .get(chatController.getAllUsersChats)
+  .post(chatController.createChat);
 
 // get chat
 // post message to chat
-router.route('/:id').get().post();
+router
+  .route('/:id')
+  .get(chatController.getChat)
+  .post(chatController.sendMessage);
+
+module.exports = router;
