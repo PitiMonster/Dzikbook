@@ -1,18 +1,13 @@
 const express = require('express');
-const { route } = require('../app');
 const userController = require('./controller');
 const authController = require('./../controllers/authController');
 const postsRouter = require('./../Post/routes');
-const relationsRouter = require('./../Relation/routes');
 const acquaintanceRouter = require('./../Acquaintance/routes');
 
 const router = express.Router();
 
 // connect posts` router to user router
 router.use('/:userId/posts', postsRouter);
-
-// connect relations' router to user routet
-router.use('/:userId/relations', relationsRouter);
 
 router.use('/:userId/friends', acquaintanceRouter);
 
