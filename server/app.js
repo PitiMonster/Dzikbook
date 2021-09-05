@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
+const cors = require('cors');
 
 const userRouter = require('./User/routes');
 const requestRouter = require('./Request/routes');
@@ -37,6 +38,9 @@ app.use(express.json());
 
 // data sanitization against NoSQL query injection
 app.use(mongoSanitize());
+
+// enabling CORS
+app.use(cors());
 
 // 2) ROUTES
 app.use('/api/v1/users', userRouter);
