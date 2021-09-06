@@ -46,12 +46,15 @@ exports.createOne = (Model) =>
 // popObject - contains path for fields to populate
 exports.getOne = (Model, popObject) =>
   catchAsync(async (req, res, next) => {
+    console.log('siema');
+    console.log(req.params.id);
     let query = Model.findById(req.params.id);
     if (popObject) query = query.populate(popObject);
-    const doc = await query.select('-__v -_id -id -role');
-
+    console.log('aaa');
+    const doc = await query.select('-__v');
+    console.log('elo');
     if (!doc) {
-      return next(new AppError('No document found with that id'));
+      return next(new AppError('No document found with that id', 404));
     }
 
     res.status(200).json({ status: 'success', data: { data: doc } });

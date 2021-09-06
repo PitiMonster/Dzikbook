@@ -15,4 +15,5 @@ export type Post = {
   type: string;
   createdAt: Date;
   images: string[];
+  _id: string;
 };
