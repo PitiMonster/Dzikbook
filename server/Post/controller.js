@@ -4,7 +4,8 @@ const catchAsync = require('./../utils/catchAsync');
 const crudHandlers = require('./../controllers/handlers');
 
 exports.setAuthorId = (req, res, next) => {
-  if (!req.body.author) req.body.author = req.params.userId;
+  console.log(req.user);
+  if (!req.body.author) req.body.author = req.user.id;
   next();
 };
 

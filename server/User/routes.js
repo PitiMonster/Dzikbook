@@ -16,6 +16,8 @@ router.post('/signin', authController.signIn);
 router.post('/forgotPassword');
 router.patch('/resetPassword/:token');
 
+router.route('/:id').get(userController.getUser);
+
 router.use(authController.protect);
 
 router.get('/me', userController.getMe, userController.getUser);
@@ -28,8 +30,6 @@ router.delete('/deleteMe');
 router.route('/').get(userController.getAllUsers);
 //   .post(userController.createUser);
 
-// router('/:id')
-//   .get(userController.getUser)
 //   .patch(userController.updateUser)
 //   .delete(userController.deleteUser);
 

@@ -4,13 +4,14 @@ const api = axios.create({
   baseURL: process.env.REACT_APP_SERVER_ADDR,
 });
 
-axios.interceptors.request.use((config) => {
+api.interceptors.request.use((config) => {
+  console.log(localStorage.getItem('token'));
   config.headers.authorization =
     'Bearer ' + localStorage.getItem('token') ?? null;
   return config;
 });
 
-axios.interceptors.response.use((response) => {
+api.interceptors.response.use((response) => {
   return response;
 });
 

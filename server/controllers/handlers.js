@@ -48,7 +48,7 @@ exports.getOne = (Model, popObject) =>
   catchAsync(async (req, res, next) => {
     let query = Model.findById(req.params.id);
     if (popObject) query = query.populate(popObject);
-    const doc = await query.select('-__v');
+    const doc = await query.select('-__v -_id -id -role');
 
     if (!doc) {
       return next(new AppError('No document found with that id'));

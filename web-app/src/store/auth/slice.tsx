@@ -8,7 +8,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   token: null,
-  isUserLoggedIn: false,
+  isUserLoggedIn: localStorage.getItem('token')!.length > 0,
   isSingupSuccess: false,
 };
 
@@ -35,6 +35,12 @@ const authSlice = createSlice({
     ) {
       const { isSingupSuccess } = action.payload;
       state.isSingupSuccess = isSingupSuccess;
+    },
+    logout(state, action) {
+      console.log('siema czyszcze');
+      state.token = null;
+      state.isUserLoggedIn = false;
+      state.isSingupSuccess = false;
     },
   },
 });

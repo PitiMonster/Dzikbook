@@ -48,18 +48,20 @@ exports.signUp = catchAsync(async (req, res, next) => {
 
 exports.signIn = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-
+  console.log(email, password);
   // 1) Check if email and password provided
   if (!email || !password) {
     return next(new AppError('Please provide email and password', 400));
   }
-
+  console.log('1');
   // 2) Check if user exists and password is correct
   const user = await User.findOne({ email: email }).select('+password');
+  console.log('2');
 
   if (!user || (await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password provided', 401));
   }
+  console.log('3');
 
   createAndSendToken(user, 200, res);
 });
@@ -67,6 +69,7 @@ exports.signIn = catchAsync(async (req, res, next) => {
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Check if token provided in headers
   let token;
+  console.log(req.headers);
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer ')
