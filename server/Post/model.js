@@ -22,6 +22,8 @@ const postSchema = new mongoose.Schema({
   images: [String],
 });
 
+postSchema.index({ author: 1, createdAt: 1 });
+
 postSchema.methods.isAuthor = function (userId) {
   return userId === this.author.toString();
 };

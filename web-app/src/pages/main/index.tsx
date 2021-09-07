@@ -23,7 +23,7 @@ const MainPage: React.FC = () => {
   return (
     <div>
       <p>Siema zalogowano!</p>
-      <NavLink exact to="/profile">
+      <NavLink exact to={`/${localStorage.getItem('userId')}`}>
         Profil
       </NavLink>
       <button onClick={logout}>Wyloguj</button>

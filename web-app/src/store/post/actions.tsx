@@ -23,9 +23,26 @@ export const createPost =
 export const getAllPosts =
   (userId: string) => async (dispatch: AppDispatch) => {
     try {
-      const response = await api.get(`/users/${userId}/posts`);
+      const response = await api.get(`/users/${userId}/posts?limit=10`);
       dispatch(postActions.setPosts({ posts: response.data.data.data }));
     } catch (err) {
       console.error('GET USERS POSTS ERROR: ', err);
+    }
+  };
+
+export const getNextTenPosts =
+  (userId: string | null, currPostsAmount: number) =>
+  async (dispatch: AppDispatch) => {
+    try {
+      const response = await api.get(
+        `/users/${userId}/posts?limit=10&page=${currPostsAmount / 10 + 1}`
+      );
+      const posts = response.data.data.data;
+      console.log(posts);
+      if (posts.length !== 0) {
+        dispatch(postActions.appendPosts({ posts }));
+      }
+    } catch (err) {
+      console.error('GET NEXT TEN POSTS ERROR', err);
     }
   };

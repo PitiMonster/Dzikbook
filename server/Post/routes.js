@@ -4,7 +4,9 @@ const postController = require('./controller');
 
 const router = express.Router({ mergeParams: true });
 
-router.route('/').get(postController.getAllPosts);
+router
+  .route('/')
+  .get(postController.setQueryAuthor, postController.getAllUsersPosts);
 router.route('/:id').get(postController.getPost);
 
 // middleware checking whether user is authorized

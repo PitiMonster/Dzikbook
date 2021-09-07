@@ -21,7 +21,7 @@ const App: React.FC = () => {
         </Route>
       )}
       <GuardRoute
-        path="/profile"
+        path="/:userId"
         exact={true}
         Component={ProfilePage}
         isPermitted={isUserLoggedIn}

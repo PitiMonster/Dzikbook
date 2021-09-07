@@ -1,5 +1,6 @@
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
+const QueryFeatures = require('./../utils/queryFeatures');
 // const APIFeatures = require('./../utils/APIFeatures')
 
 // delete object of given Model assigned to req.params.id
@@ -46,13 +47,9 @@ exports.createOne = (Model) =>
 // popObject - contains path for fields to populate
 exports.getOne = (Model, popObject) =>
   catchAsync(async (req, res, next) => {
-    console.log('siema');
-    console.log(req.params.id);
     let query = Model.findById(req.params.id);
     if (popObject) query = query.populate(popObject);
-    console.log('aaa');
     const doc = await query.select('-__v');
-    console.log('elo');
     if (!doc) {
       return next(new AppError('No document found with that id', 404));
     }
@@ -71,14 +68,19 @@ exports.getAll = (Model, ...popObjects) =>
       else filter['receiver'] = req.user.id;
     }
     console.log(filter);
-    const query = Model.find(filter).select('-__v');
+    console.log(req.query);
+    const features = new QueryFeatures(Model.find(filter), req.query)
+      .filter()
+      .limitFields()
+      .sort()
+      .paginate();
     let docs;
     if (popObjects.length > 0) {
-      for (popObject of popObjects) {
-        query.populate(popObject);
+      for (const popObject of popObjects) {
+        features.query.populate(popObject);
       }
-      docs = await query;
-    } else docs = await query;
+      docs = await features.query;
+    } else docs = await features.query;
 
     res.status(200).json({ status: 'success', data: { data: docs } });
   });

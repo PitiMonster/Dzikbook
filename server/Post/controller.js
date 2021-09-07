@@ -4,8 +4,12 @@ const catchAsync = require('./../utils/catchAsync');
 const crudHandlers = require('./../controllers/handlers');
 
 exports.setAuthorId = (req, res, next) => {
-  console.log(req.user);
   if (!req.body.author) req.body.author = req.user.id;
+  next();
+};
+
+exports.setQueryAuthor = (req, res, next) => {
+  if (!req.query.author) req.query.author = req.params.userId;
   next();
 };
 
@@ -17,10 +21,11 @@ exports.isAuthor = catchAsync(async (req, res, next) => {
   next();
 });
 
-exports.getAllPosts = crudHandlers.getAll(Post, {
+exports.getAllUsersPosts = crudHandlers.getAll(Post, {
   path: 'author',
   select: 'name surname username profilePhotos',
 });
+
 exports.getPost = crudHandlers.getOne(Post, {
   path: 'author',
   select: 'name surname username profilePhotos',

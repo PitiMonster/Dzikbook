@@ -7,6 +7,7 @@ export const signin = (email: string, password: string) => {
     try {
       const response = await api.post('/users/signin', { email, password });
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('userId', response.data.data.user._id);
       dispatch(
         authActions.login({
           token: response.data.token,
