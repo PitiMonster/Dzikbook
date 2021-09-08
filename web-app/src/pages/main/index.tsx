@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useRouteMatch } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { authActions } from '../../store/auth/slice';
@@ -8,6 +8,7 @@ import { getUsersByNameSurnameUsername } from '../../store/user/actions';
 
 const MainPage: React.FC = () => {
   const dispatch = useAppDispatch();
+  const routeMatch = useRouteMatch();
   const postInputRef = useRef<HTMLInputElement>(null);
   const [searchText, setSearchText] = useState<string>('');
 
@@ -23,33 +24,38 @@ const MainPage: React.FC = () => {
 
   // sending search request
   useEffect(() => {
+    console.log(searchText);
     const timerToSendSearchReq: ReturnType<typeof setTimeout> = setTimeout(
       () => {
         dispatch(getUsersByNameSurnameUsername(searchText));
       },
-      1000
+      500
     );
     return () => {
       clearTimeout(timerToSendSearchReq);
     };
   }, [searchText, dispatch]);
 
+  // creating list of search results
   useEffect(() => {
     console.log(searchedUsers);
     const newSearchResults: React.DetailedHTMLProps<
       React.HTMLAttributes<HTMLDivElement>,
       HTMLDivElement
     >[] = searchedUsers.map((user) => (
-      <div key={user.id}>
+      <NavLink to={`/${user.id}`} key={user.id}>
         <p>{`${user.name} ${user.surname}`}</p>
-      </div>
+      </NavLink>
     ));
     setSearchResults(newSearchResults);
-  }, [searchedUsers]);
+  }, [searchedUsers, routeMatch.path]);
 
   const logout = () => {
     dispatch(authActions.logout({}));
   };
+
+  console.log(routeMatch.path);
+  console.log(routeMatch.url);
 
   const createNewPost = () => {
     const text = postInputRef.current!.value;
