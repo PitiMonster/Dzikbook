@@ -11,8 +11,24 @@ class QueryFeatures {
 
     // Advanced filtering
     let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-
+    queryStr = queryStr.replace(
+      /\b(gte|gt|lte|lt|regex|or)\b/g,
+      (match) => `$${match}`
+    );
+    if ('or' in queryObj) {
+      console.log('elo elo');
+      queryStr = queryStr.replace(
+        /("\$or":"true",)(.*)\}$/,
+        (p1, p2, p3) =>
+          `"$or":[{${p3
+            .split(',')
+            .join('},{')
+            .split('"}')
+            .join('", "$options": "i"}')}}]}`
+      );
+    }
+    console.log(queryStr);
+    console.log(JSON.parse(queryStr));
     this.query = this.query.find(JSON.parse(queryStr));
 
     return this;

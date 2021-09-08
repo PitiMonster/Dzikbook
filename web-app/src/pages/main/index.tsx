@@ -1,15 +1,51 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { authActions } from '../../store/auth/slice';
 import { createPost } from '../../store/post/actions';
+import { getUsersByNameSurnameUsername } from '../../store/user/actions';
 
 const MainPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const postInputRef = useRef<HTMLInputElement>(null);
+  const [searchText, setSearchText] = useState<string>('');
 
   const userId = useAppSelector((store) => store.me.id);
+  const searchedUsers = useAppSelector((store) => store.user.searchedUsers);
+
+  const [searchResults, setSearchResults] = useState<
+    React.DetailedHTMLProps<
+      React.HTMLAttributes<HTMLDivElement>,
+      HTMLDivElement
+    >[]
+  >([]);
+
+  // sending search request
+  useEffect(() => {
+    const timerToSendSearchReq: ReturnType<typeof setTimeout> = setTimeout(
+      () => {
+        dispatch(getUsersByNameSurnameUsername(searchText));
+      },
+      1000
+    );
+    return () => {
+      clearTimeout(timerToSendSearchReq);
+    };
+  }, [searchText, dispatch]);
+
+  useEffect(() => {
+    console.log(searchedUsers);
+    const newSearchResults: React.DetailedHTMLProps<
+      React.HTMLAttributes<HTMLDivElement>,
+      HTMLDivElement
+    >[] = searchedUsers.map((user) => (
+      <div key={user.id}>
+        <p>{`${user.name} ${user.surname}`}</p>
+      </div>
+    ));
+    setSearchResults(newSearchResults);
+  }, [searchedUsers]);
 
   const logout = () => {
     dispatch(authActions.logout({}));
@@ -18,6 +54,16 @@ const MainPage: React.FC = () => {
   const createNewPost = () => {
     const text = postInputRef.current!.value;
     dispatch(createPost(text, userId));
+  };
+
+  const onChangeSearchText = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.currentTarget.value;
+    setSearchText(newValue);
+  };
+
+  const goToSearchResults = () => {
+    // go to page with list of search results
+    console.log('go to search results page');
   };
 
   return (
@@ -32,6 +78,15 @@ const MainPage: React.FC = () => {
         <input placeholder="Co tam u Ciebie słychać?" ref={postInputRef} />
       </label>
       <button onClick={createNewPost}>Dodaj post</button>
+      <label>
+        <input
+          placeholder="Szukaj na Dzikbooku"
+          value={searchText}
+          onChange={onChangeSearchText}
+        />
+      </label>
+      <button onClick={goToSearchResults}>Wyszukaj</button>
+      {searchResults}
     </div>
   );
 };

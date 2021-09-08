@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '../../types';
+import { Post, User } from '../../types';
 
-const initialState: User = {
+const initialState: User & { searchedUsers: User[] } = {
   id: null,
   email: null,
   name: null,
@@ -10,6 +10,7 @@ const initialState: User = {
   photos: null,
   profilePhotos: null,
   role: null,
+  searchedUsers: [],
 };
 
 const userSlice = createSlice({
@@ -49,6 +50,10 @@ const userSlice = createSlice({
       state.photos = photos;
       state.profilePhotos = profilePhotos;
       state.role = role;
+    },
+    setSearchUserResults(state, action: PayloadAction<{ users: User[] }>) {
+      console.log(action.payload.users);
+      state.searchedUsers = action.payload.users;
     },
   },
 });

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { useParams, Route, Link, useRouteMatch } from 'react-router-dom';
 
-import { getMe } from '../../store/me/actions';
 import { getUserById } from '../../store/user/actions';
 import { getNextTenPosts } from '../../store/post/actions';
 
@@ -40,7 +39,6 @@ const ProfilePage: React.FC = () => {
   }, [dispatch, myPosts.length, userId]);
 
   useEffect(() => {
-    // if ()
     dispatch(getUserById(userId));
   }, [dispatch, userId]);
 
