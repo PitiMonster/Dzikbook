@@ -30,6 +30,13 @@ const userSchema = new mongoose.Schema(
       },
     ],
     photos: [{ String }],
+    friends: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Acquaintance',
+        default: [],
+      },
+    ],
     role: {
       type: String,
       enum: ['user', 'admin'],
@@ -100,6 +107,15 @@ userSchema.pre('save', async function (next) {
 // check if user's password is equal provided password
 userSchema.methods.correctPassword = (providedPassword, userPassword) =>
   SHA256(providedPassword) === userPassword;
+
+userSchema.methods.isFriend = function (friendId) {
+  console.log(this.friends);
+  const friend = this.friends.filter(
+    (friend) => friend.friend.toString() === friendId.toString()
+  );
+  console.log(friend);
+  return friend.length > 0 ? true : false;
+};
 
 // check if provided JWT was not generated before password change
 userSchema.methods.passwordChangedAfter = function (JWTTimestamp) {
