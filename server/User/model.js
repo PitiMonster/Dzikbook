@@ -98,6 +98,9 @@ userSchema.methods.correctPassword = (providedPassword, userPassword) =>
   SHA256(providedPassword).toString() === userPassword;
 
 userSchema.methods.isFriend = function (friendId) {
+  console.log(this.friends);
+  console.log(this._id);
+  console.log(friendId);
   const friend = this.friends.filter(
     (friend) => friend.friend.toString() === friendId.toString()
   );
