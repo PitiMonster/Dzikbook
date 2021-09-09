@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const SHA256 = require('crypto-js/sha256');
-const slugify = require('slugify');
 const validator = require('validator');
 
 const userSchema = new mongoose.Schema(
@@ -93,16 +92,6 @@ userSchema.pre('save', async function (next) {
   this.passwordConfirm = undefined;
   next();
 });
-
-// userSchema.pre('save', async function (next) {
-//   if (!this.isModified('password') || this.isNew) {
-//     this.isNew = false;
-//     return next();
-//   }
-
-//   this.passwordChangedAt = Date.now() - 1000;
-//   next();
-// });
 
 // check if user's password is equal provided password
 userSchema.methods.correctPassword = (providedPassword, userPassword) =>

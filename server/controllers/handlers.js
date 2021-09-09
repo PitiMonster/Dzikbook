@@ -1,7 +1,6 @@
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const QueryFeatures = require('./../utils/queryFeatures');
-// const APIFeatures = require('./../utils/APIFeatures')
 
 // delete object of given Model assigned to req.params.id
 exports.deleteOne = (Model) =>
@@ -44,7 +43,7 @@ exports.createOne = (Model) =>
   });
 
 // get object of given Model assigned to req.params.id
-// popObject - contains path for fields to populate
+// popObject - contains paths for fields to populate
 exports.getOne = (Model, popObject) =>
   catchAsync(async (req, res, next) => {
     let query = Model.findById(req.params.id);
@@ -67,8 +66,6 @@ exports.getAll = (Model, ...popObjects) =>
       if (req.params.requestStatus === 'sent') filter['sender'] = req.user.id;
       else filter['receiver'] = req.user.id;
     }
-    console.log(filter);
-    console.log(req.query);
     const features = new QueryFeatures(Model.find(filter), req.query)
       .filter()
       .limitFields()

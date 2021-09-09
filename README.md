@@ -36,7 +36,7 @@ Server app, written in Node.js is placed in _server_ directory.
 
 You can run it in two ways:
 
-1. With [docker](https://www.docker.com/) tool
+1. With [docker](https://www.docker.com/get-started) tool
 
 ```
 docker-compose up

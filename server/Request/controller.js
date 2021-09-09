@@ -74,7 +74,6 @@ exports.answerTheRequest = catchAsync(async (req, res, next) => {
     );
   }
 
-  console.log(request.receiver);
   const receiver = await User.findById(request.receiver);
   const sender = await User.findById(request.sender);
 
@@ -104,7 +103,6 @@ exports.answerTheRequest = catchAsync(async (req, res, next) => {
       await Request.findByIdAndDelete(request._id);
       break;
     case 'reject':
-      // delete request
       await Request.findByIdAndDelete(request._id);
 
     default:

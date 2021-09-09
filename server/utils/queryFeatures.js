@@ -16,7 +16,6 @@ class QueryFeatures {
       (match) => `$${match}`
     );
     if ('or' in queryObj) {
-      console.log('elo elo');
       queryStr = queryStr.replace(
         /("\$or":"true",)(.*)\}$/,
         (p1, p2, p3) =>
@@ -27,8 +26,6 @@ class QueryFeatures {
             .join('", "$options": "i"}')}}]}`
       );
     }
-    console.log(queryStr);
-    console.log(JSON.parse(queryStr));
     this.query = this.query.find(JSON.parse(queryStr));
 
     return this;
@@ -58,7 +55,6 @@ class QueryFeatures {
   paginate() {
     const page = +this.queryString.page || 1;
     const limit = +this.queryString.limit || 20;
-    console.log(page, limit);
     const skip = (page - 1) * limit;
 
     this.query = this.query.skip(skip).limit(limit);
