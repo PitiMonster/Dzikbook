@@ -66,6 +66,10 @@ npm i
 npm run
 ```
 
+## Documentation
+
+[Postman](https://documenter.getpostman.com/view/11153882/U16jNmC1)
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
