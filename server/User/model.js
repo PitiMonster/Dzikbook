@@ -56,19 +56,19 @@ const userSchema = new mongoose.Schema(
         },
         message: 'Password confirmation differs from password',
       },
-      passwordChangedAt: Date,
-      passwordResetToken: String,
-      passwordResetExpires: Date,
-      active: {
-        type: Boolean,
-        default: true,
-        select: false,
-      },
-      isNew: {
-        type: Boolean,
-        default: true,
-        select: false,
-      },
+    },
+    passwordChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+    active: {
+      type: Boolean,
+      default: true,
+      select: false,
+    },
+    isNewUser: {
+      type: Boolean,
+      default: true,
+      select: false,
     },
   },
   {
@@ -106,10 +106,9 @@ userSchema.pre('save', async function (next) {
 
 // check if user's password is equal provided password
 userSchema.methods.correctPassword = (providedPassword, userPassword) =>
-  SHA256(providedPassword) === userPassword;
+  SHA256(providedPassword).toString() === userPassword;
 
 userSchema.methods.isFriend = function (friendId) {
-  console.log(this.friends);
   const friend = this.friends.filter(
     (friend) => friend.friend.toString() === friendId.toString()
   );
@@ -120,13 +119,9 @@ userSchema.methods.isFriend = function (friendId) {
 // check if provided JWT was not generated before password change
 userSchema.methods.passwordChangedAfter = function (JWTTimestamp) {
   if (this.passwordChangedAt) {
-    const changedTimestamp = parseInt(
-      this.passwordChangedAt.getTime() / 1000,
-      10
-    );
+    const changedTimestamp = parseInt(this.passwordChangedAt.getTime(), 10);
     return JWTTimestamp < changedTimestamp;
   }
-
   // false means NOT changed
   return false;
 };

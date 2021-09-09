@@ -1,4 +1,3 @@
-const SHA256 = require('crypto-js/sha256');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('./../User/model');
@@ -48,20 +47,15 @@ exports.signUp = catchAsync(async (req, res, next) => {
 
 exports.signIn = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-  console.log(email, password);
   // 1) Check if email and password provided
   if (!email || !password) {
     return next(new AppError('Please provide email and password', 400));
   }
-  console.log('1');
   // 2) Check if user exists and password is correct
   const user = await User.findOne({ email: email }).select('+password');
-  console.log('2');
-
-  if (!user || (await user.correctPassword(password, user.password))) {
+  if (!user || !user.correctPassword(password, user.password)) {
     return next(new AppError('Incorrect email or password provided', 401));
   }
-  console.log('3');
 
   createAndSendToken(user, 200, res);
 });
@@ -83,7 +77,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   // 2) Verificate token
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
   // 3 Check if user still exists
   const currentUser = await User.findById(decoded.id);
@@ -95,7 +89,6 @@ exports.protect = catchAsync(async (req, res, next) => {
       )
     );
   }
-
   // 4) Check if usser changed password afte the token was issued
   if (currentUser.passwordChangedAfter(decoded.iat)) {
     return next(
@@ -105,7 +98,6 @@ exports.protect = catchAsync(async (req, res, next) => {
       )
     );
   }
-
   // GRANT ACCESS TO PROTECTED ROUTE
   req.user = currentUser;
   next();
@@ -119,5 +111,5 @@ exports.restrictTo =
         new AppError('You do not have permission to this action.', 403)
       );
     }
-    next();
+    return next();
   };
