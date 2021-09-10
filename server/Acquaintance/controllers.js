@@ -1,4 +1,3 @@
-const Acquaintance = require('./model');
 const User = require('./../User/model');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');

@@ -37,6 +37,7 @@ exports.updateOne = (Model) =>
 // create object of given Model with req.body data
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
+    console.log(req.body);
     const doc = await Model.create(req.body);
 
     res.status(201).json({ status: 'success', data: { data: doc } });
@@ -78,6 +79,5 @@ exports.getAll = (Model, ...popObjects) =>
       }
       docs = await features.query;
     } else docs = await features.query;
-
     res.status(200).json({ status: 'success', data: { data: docs } });
   });

@@ -17,3 +17,9 @@ export type Post = {
   images: string[];
   _id: string;
 };
+
+export type Request = {
+  _id: string;
+  receiver: User;
+  sender: User;
+};

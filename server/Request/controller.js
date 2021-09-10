@@ -47,16 +47,17 @@ exports.canSendRequest = catchAsync(async (req, res, next) => {
 exports.getRequests = crudHandlers.getAll(
   Request,
   {
-    path: 'sender',
+    path: 'receiver',
     select: 'name surname username profilePhotos',
   },
   {
-    path: 'receiver',
+    path: 'sender',
     select: 'name surname username profilePhotos',
   }
 );
 exports.createRequest = crudHandlers.createOne(Request);
 exports.answerTheRequest = catchAsync(async (req, res, next) => {
+  console.log(req.body.answer);
   if (!req.body.answer) {
     return next(new AppError('Request answer was not provided!', 400));
   }
@@ -77,8 +78,11 @@ exports.answerTheRequest = catchAsync(async (req, res, next) => {
   const receiver = await User.findById(request.receiver);
   const sender = await User.findById(request.sender);
 
+  let response = '';
+
   switch (req.body.answer) {
     case 'accept':
+      response = 'accepted';
       // create acquaintance, chat for these users and delete request
       const senderAcquaintance = await Acquaintance.create({
         friend: request.receiver,
@@ -93,23 +97,24 @@ exports.answerTheRequest = catchAsync(async (req, res, next) => {
       receiver.friends.push(receiverAcquaintance);
       sender.friends.push(senderAcquaintance);
 
-      receiver.save({ validateBeforeSave: false });
-      sender.save({ validateBeforeSave: false });
+      await receiver.save({ validateBeforeSave: false });
+      await sender.save({ validateBeforeSave: false });
 
       const chat = await Chat.create({
         members: [request.sender, request.receiver],
       });
-      chat.save();
       await Request.findByIdAndDelete(request._id);
       break;
     case 'reject':
+      response = 'rejected';
       await Request.findByIdAndDelete(request._id);
-
+      break;
     default:
       break;
   }
 
   res.status(200).json({
     status: 'success',
+    data: response,
   });
 });

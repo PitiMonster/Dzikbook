@@ -4,6 +4,8 @@ import api from '../../api/api';
 import { getAllPosts } from '../post/actions';
 import { userActions } from './slice';
 
+import { Request } from '../../types';
+
 export const getUserById =
   (userId: string) => async (dispatch: AppDispatch) => {
     try {
@@ -36,3 +38,48 @@ export const getUsersByNameSurnameUsername =
       console.error('GET USER BY NAME SURNAME USERNAME ERROR', err);
     }
   };
+
+export const checkIfFriend = async (friendId: string): Promise<Boolean> => {
+  try {
+    const response = await api.get(`/acquaintance/${friendId}`);
+    return response.data.data;
+  } catch (err) {
+    console.error('CHECK IF FRIEND ERROR: ', err);
+  }
+  return false;
+};
+
+export const sendAquaintanceRequest = async (
+  friendId: string
+): Promise<void> => {
+  try {
+    await api.post('/requests', { receiver: friendId });
+  } catch (err) {
+    console.error('SEND AQUAINTANCE REQUEST ERROR: ', err);
+  }
+};
+
+export const getReceivedRequests = async (): Promise<Request[]> => {
+  try {
+    const response = await api.get('/requests/acquaintance/received');
+    return response.data.data.data;
+  } catch (err) {
+    console.error('GET RECEIVED REQUESTS ERROR: ', err);
+  }
+  return [];
+};
+
+export const answerAquaintanceRequest = async (
+  requestId: string,
+  answer: string
+): Promise<string | void> => {
+  try {
+    if (!['accept', 'reject'].includes(answer)) return;
+    const response = await api.post(`/requests/${requestId}`, { answer });
+    console.log(response);
+    return response.data.data;
+  } catch (err) {
+    console.error('answer AQUAINTANCE REQUEST ERROR: ', err);
+  }
+  return;
+};
