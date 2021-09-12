@@ -6,7 +6,7 @@ import Message from '../Message';
 
 import classes from './index.module.scss';
 
-const Chat: React.FC<{ chatId: string }> = (props) => {
+const Chat: React.FC<{ chat: ChatType }> = (props) => {
   const [chatObject, setChatObject] = useState<ChatType | null>();
   const [messages, setMessages] = useState<
     | React.DetailedHTMLProps<
@@ -19,23 +19,25 @@ const Chat: React.FC<{ chatId: string }> = (props) => {
 
   useEffect(() => {
     (async () => {
-      const newChat = await getChatById(props.chatId);
+      const newChat = props.chat;
       console.log(newChat);
       setChatObject(newChat);
     })();
-  }, [props.chatId]);
+  }, [props.chat]);
 
   useEffect(() => {
-    const newMessages = chatObject?.messages
+    console.log(chatObject?.messages);
+    if (!chatObject) return;
+    const newMessages = [...chatObject!.messages]
       .reverse()
       .map((el) => <Message message={el} key={el._id} />);
     setMessages(newMessages);
-  }, [chatObject?.messages]);
+  }, [chatObject]);
 
   const sendTextMessage = () => {
     if (!messageInputValue) return;
 
-    sendMessage(props.chatId, messageInputValue);
+    sendMessage(props.chat._id, messageInputValue);
     setMessageInputValue('');
   };
 

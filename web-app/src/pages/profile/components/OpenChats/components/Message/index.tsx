@@ -12,7 +12,7 @@ const Message: React.FC<{ message: MessageType }> = (props) => {
     if (props.message.author._id === localStorage.getItem('userId')) {
       setMessageClasses((curr) => [curr[0], classes.authorMe]);
     } else setMessageClasses((curr) => [curr[0], classes.authorOther]);
-  }, [messageClasses, props.message.author._id]);
+  }, [props.message.author._id]);
 
   return <div className={messageClasses.join(' ')}>{props.message.text}</div>;
 };

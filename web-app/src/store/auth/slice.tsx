@@ -8,7 +8,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   token: null,
-  isUserLoggedIn: localStorage.getItem('token')!.length > 0,
+  isUserLoggedIn: !!localStorage.getItem('token'),
   isSingupSuccess: false,
 };
 

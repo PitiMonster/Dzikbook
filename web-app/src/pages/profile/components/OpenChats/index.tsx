@@ -11,7 +11,8 @@ const OpenChats: React.FC = () => {
       HTMLDivElement
     >;
   };
-  const chatsId = useAppSelector((store) => store.chat.openedChats);
+  const openedChats = useAppSelector((store) => store.chat.openedChats);
+  const openedChatsId = useAppSelector((store) => store.chat.openedChatsId);
 
   const [openChatObjects, setOpenChatObjects] = useState<openedObjects>({});
 
@@ -23,16 +24,21 @@ const OpenChats: React.FC = () => {
           HTMLDivElement
         >;
       } = {};
-      chatsId.forEach((el) => (newOpenedChats[el] = current[el]));
-      newOpenedChats[chatsId[0]] = <ChatWindow chatId={chatsId[0]} />;
+      Object.keys(openedChats).forEach(
+        (el) => (newOpenedChats[el] = current[el])
+      );
+      newOpenedChats[openedChatsId[0]] = (
+        <ChatWindow chat={openedChats[openedChatsId[0]]} />
+      );
       return newOpenedChats;
     },
-    [chatsId]
+    [openedChats, openedChatsId]
   );
 
   useEffect(() => {
+    console.log('siema repeat');
     setOpenChatObjects(updateOpenedChats);
-  }, [chatsId, updateOpenedChats]);
+  }, [openedChats, updateOpenedChats]);
 
   return (
     <div className={classes.container}>{Object.values(openChatObjects)}</div>

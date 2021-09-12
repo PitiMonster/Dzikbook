@@ -10,7 +10,7 @@ import {
   answerAquaintanceRequest,
   getAllUsersFriends,
 } from '../../store/user/actions';
-import { chatActions } from '../../store/chat/slice';
+import { getChatById } from '../../store/chat/actions';
 import { getNextTenPosts } from '../../store/post/actions';
 import { Request } from '../../types';
 import OpenedChats from './components/OpenChats';
@@ -128,9 +128,7 @@ const ProfilePage: React.FC = () => {
       friendships.map((friendship) => (
         <div
           key={friendship._id}
-          onClick={() =>
-            dispatch(chatActions.openChat({ chat: friendship.chat }))
-          }
+          onClick={() => dispatch(getChatById(friendship.chat))}
         >
           {`${friendship.friend.name} ${friendship.friend.surname}`}
         </div>
