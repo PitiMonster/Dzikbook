@@ -44,12 +44,18 @@ exports.createOne = (Model) =>
   });
 
 // get object of given Model assigned to req.params.id
-// popObject - contains paths for fields to populate
-exports.getOne = (Model, popObject) =>
+// popObjects - contains paths for fields to populate
+exports.getOne = (Model, ...popObjects) =>
   catchAsync(async (req, res, next) => {
     let query = Model.findById(req.params.id);
-    if (popObject) query = query.populate(popObject);
-    const doc = await query.select('-__v');
+
+    let doc;
+    if (popObjects.length > 0) {
+      for (const popObject of popObjects) {
+        query.populate(popObject);
+      }
+      doc = await query.select('-__v');
+    } else doc = await query.select('-__v');
     if (!doc) {
       return next(new AppError('No document found with that id', 404));
     }

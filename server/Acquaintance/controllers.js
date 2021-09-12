@@ -5,8 +5,13 @@ const AppError = require('./../utils/appError');
 exports.getAllFriends = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.params.userId).populate({
     path: 'friends',
-    select: 'friend createdAt',
+    select: 'friend createdAt chat',
+    populate: {
+      path: 'friend',
+      select: 'name surname username profilePhotos',
+    },
   });
+
   if (!user) {
     return next(new AppError('User with provided ID does not exist', 404));
   }

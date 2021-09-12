@@ -84,25 +84,26 @@ exports.answerTheRequest = catchAsync(async (req, res, next) => {
     case 'accept':
       response = 'accepted';
       // create acquaintance, chat for these users and delete request
+      const chat = await Chat.create({
+        members: [request.sender, request.receiver],
+      });
+
       const senderAcquaintance = await Acquaintance.create({
         friend: request.receiver,
+        chat: chat._id,
       });
-      senderAcquaintance.save();
+
       const receiverAcquaintance = await Acquaintance.create({
         friend: request.sender,
+        chat: chat._id,
       });
-      senderAcquaintance.save();
-      receiverAcquaintance.save();
 
       receiver.friends.push(receiverAcquaintance);
       sender.friends.push(senderAcquaintance);
 
-      await receiver.save({ validateBeforeSave: false });
-      await sender.save({ validateBeforeSave: false });
+      receiver.save({ validateBeforeSave: false });
+      sender.save({ validateBeforeSave: false });
 
-      const chat = await Chat.create({
-        members: [request.sender, request.receiver],
-      });
       await Request.findByIdAndDelete(request._id);
       break;
     case 'reject':

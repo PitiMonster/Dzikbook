@@ -5,6 +5,8 @@ dotenv.config({ path: './config.env' });
 
 const app = require('./app');
 
+const runSockets = require('./Websockets');
+
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
   process.env.DATABASE_PASSWORD
@@ -44,6 +46,7 @@ mongoose
 // Constants
 const port = process.env.PORT || 8080;
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`App running on port ${port}`);
 });
+runSockets(server);

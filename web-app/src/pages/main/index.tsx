@@ -12,7 +12,7 @@ const MainPage: React.FC = () => {
   const postInputRef = useRef<HTMLInputElement>(null);
   const [searchText, setSearchText] = useState<string>('');
 
-  const userId = useAppSelector((store) => store.me.id);
+  const userId = useAppSelector((store) => store.me._id);
   const searchedUsers = useAppSelector((store) => store.user.searchedUsers);
 
   const [searchResults, setSearchResults] = useState<
@@ -43,7 +43,7 @@ const MainPage: React.FC = () => {
       React.HTMLAttributes<HTMLDivElement>,
       HTMLDivElement
     >[] = searchedUsers.map((user) => (
-      <NavLink to={`/${user.id}`} key={user.id}>
+      <NavLink to={`/${user._id}`} key={user._id}>
         <p>{`${user.name} ${user.surname}`}</p>
       </NavLink>
     ));

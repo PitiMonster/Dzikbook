@@ -4,7 +4,7 @@ import api from '../../api/api';
 import { getAllPosts } from '../post/actions';
 import { userActions } from './slice';
 
-import { Request } from '../../types';
+import { Request, Aquaintance } from '../../types';
 
 export const getUserById =
   (userId: string) => async (dispatch: AppDispatch) => {
@@ -82,4 +82,17 @@ export const answerAquaintanceRequest = async (
     console.error('answer AQUAINTANCE REQUEST ERROR: ', err);
   }
   return;
+};
+
+export const getAllUsersFriends = async (
+  userId: string
+): Promise<Aquaintance[]> => {
+  try {
+    const response = await api.get(`/users/${userId}/friends`);
+    console.log(response);
+    return response.data.data.data;
+  } catch (err) {
+    console.error('GET ALL USERS FRIENDS ERROR: ', err);
+  }
+  return [];
 };

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { useParams, Route, Link, useRouteMatch } from 'react-router-dom';
 
@@ -8,9 +8,12 @@ import {
   sendAquaintanceRequest,
   getReceivedRequests,
   answerAquaintanceRequest,
+  getAllUsersFriends,
 } from '../../store/user/actions';
+import { chatActions } from '../../store/chat/slice';
 import { getNextTenPosts } from '../../store/post/actions';
 import { Request } from '../../types';
+import OpenedChats from './components/OpenChats';
 
 const ProfilePage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -29,6 +32,12 @@ const ProfilePage: React.FC = () => {
   >([]);
 
   const [isFriend, setIsFriend] = useState<Boolean | string>("it's you");
+  const [friends, setFriends] = useState<
+    React.DetailedHTMLProps<
+      React.HTMLAttributes<HTMLDivElement>,
+      HTMLDivElement
+    >[]
+  >([]);
   // TODO when diversify on separate components
   const [requestResponseInfo, setRequestResponseInfo] = useState<string>('');
   const [receivedRequests, setReceivedRequests] = useState<
@@ -56,24 +65,6 @@ const ProfilePage: React.FC = () => {
   }, [dispatch, myPosts.length, userId]);
 
   useEffect(() => {
-    dispatch(getUserById(userId));
-    if (localStorage.getItem('userId') !== userId) {
-      (async () => {
-        const isYourFriend = await checkIfFriend(userId);
-        setIsFriend(isYourFriend);
-      })();
-    } else {
-      (async () => {
-        const requests = await getReceivedRequests();
-        console.log('siema elo byq');
-        console.log(requests);
-
-        setReceivedRequests(createRequestsList(requests));
-      })();
-    }
-  }, [dispatch, userId]);
-
-  useEffect(() => {
     if (myPosts) {
       const newPostsList = myPosts.map((post) => (
         <div key={post._id}>
@@ -85,6 +76,73 @@ const ProfilePage: React.FC = () => {
       setPostsList(newPostsList);
     }
   }, [myPosts]);
+
+  const createRequestsList = useCallback(
+    (requests: Request[]) =>
+      requests.map((request) => (
+        <div key={request._id}>
+          <p>Zaproszenie do znajomych od</p>
+          <h4>{`${request.sender.name} ${request.sender.surname}`}</h4>
+          {requestResponseInfo ? (
+            <p>{requestResponseInfo}</p>
+          ) : (
+            <>
+              <button
+                onClick={() =>
+                  handleAnswerAquaintanceRequest(request._id, 'accept')
+                }
+              >
+                Akceptuj
+              </button>
+              <button
+                onClick={() =>
+                  handleAnswerAquaintanceRequest(request._id, 'reject')
+                }
+              >
+                Odrzuć
+              </button>
+            </>
+          )}
+        </div>
+      )),
+    [requestResponseInfo]
+  );
+
+  const getUserRequests = useCallback(() => {
+    if (localStorage.getItem('userId') !== userId) {
+      (async () => {
+        const isYourFriend = await checkIfFriend(userId);
+        setIsFriend(isYourFriend);
+      })();
+    } else {
+      (async () => {
+        const requests = await getReceivedRequests();
+        setReceivedRequests(createRequestsList(requests));
+      })();
+    }
+  }, [createRequestsList, userId]);
+
+  const getUserFriends = useCallback(async () => {
+    const friendships = await getAllUsersFriends(userId);
+    setFriends(
+      friendships.map((friendship) => (
+        <div
+          key={friendship._id}
+          onClick={() =>
+            dispatch(chatActions.openChat({ chat: friendship.chat }))
+          }
+        >
+          {`${friendship.friend.name} ${friendship.friend.surname}`}
+        </div>
+      ))
+    );
+  }, [userId, dispatch]);
+
+  useEffect(() => {
+    dispatch(getUserById(userId));
+    getUserRequests();
+    getUserFriends();
+  }, [dispatch, userId, getUserRequests, getUserFriends]);
 
   const handleFriendButton = () => {
     if (!isFriend) {
@@ -111,40 +169,10 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  const createRequestsList = (requests: Request[]) =>
-    requests.map((request) => {
-      return (
-        <div key={request._id}>
-          <p>Zaproszenie do znajomych od</p>
-          <h4>{`${request.sender.name} ${request.sender.surname}`}</h4>
-          {requestResponseInfo ? (
-            <p>{requestResponseInfo}</p>
-          ) : (
-            <>
-              <button
-                onClick={() =>
-                  handleAnswerAquaintanceRequest(request._id, 'accept')
-                }
-              >
-                Akceptuj
-              </button>
-              <button
-                onClick={() =>
-                  handleAnswerAquaintanceRequest(request._id, 'reject')
-                }
-              >
-                Odrzuć
-              </button>
-            </>
-          )}
-        </div>
-      );
-    });
-
   return (
     <div>
       <p>I oto mój profil</p>
-      <p>{userProfileData.id}</p>
+      <p>{userProfileData._id}</p>
       <p>{userProfileData.name}</p>
       <p>{userProfileData.surname}</p>
       <p>{userProfileData.email}</p>
@@ -158,6 +186,13 @@ const ProfilePage: React.FC = () => {
         </button>
       )}
       {receivedRequests}
+      {friends.length > 0 && (
+        <>
+          <h3>Znajomi</h3>
+          {friends}
+        </>
+      )}
+      <OpenedChats />
       {postsList}
     </div>
   );

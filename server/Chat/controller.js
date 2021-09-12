@@ -2,6 +2,7 @@ const Chat = require('./model');
 const crudHandlers = require('../controllers/handlers');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const Message = require('./../Message/model');
 
 exports.setAuthor = (req, res, next) => {
   req.body.author = req.user.id;
@@ -9,7 +10,20 @@ exports.setAuthor = (req, res, next) => {
 };
 
 exports.createChat = crudHandlers.createOne(Chat);
-exports.getChat = crudHandlers.getOne(Chat);
+exports.getChat = crudHandlers.getOne(
+  Chat,
+  {
+    path: 'members',
+    select: 'name surname profilePhotos',
+  },
+  {
+    path: 'messages',
+    populate: {
+      path: 'author',
+      select: 'profilePhotos',
+    },
+  }
+);
 
 exports.sendMessage = catchAsync(async (req, res, next) => {
   const chat = await Chat.findById(req.params.id);
@@ -22,7 +36,10 @@ exports.sendMessage = catchAsync(async (req, res, next) => {
     return next(new AppError('No message to send provied', 404));
   }
 
-  const newMessage = { author: req.user.id, text: req.body.message };
+  const newMessage = await Message.create({
+    author: req.user.id,
+    text: req.body.message,
+  });
 
   chat.messages.push(newMessage);
   chat.save();

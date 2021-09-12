@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Post, User } from '../../types';
 
 const initialState: User & { searchedUsers: User[] } = {
-  id: null,
+  _id: null,
   email: null,
   name: null,
   surname: null,
@@ -20,7 +20,7 @@ const userSlice = createSlice({
     setProfileData(
       state,
       action: PayloadAction<{
-        id: string;
+        _id: string;
         email: string;
         name: string;
         surname: string;
@@ -33,7 +33,7 @@ const userSlice = createSlice({
       console.log('siema funkcja');
       console.log(action.payload);
       const {
-        id,
+        _id,
         email,
         name,
         surname,
@@ -42,7 +42,7 @@ const userSlice = createSlice({
         profilePhotos,
         role,
       } = action.payload;
-      state.id = id;
+      state._id = _id;
       state.email = email;
       state.name = name;
       state.surname = surname;

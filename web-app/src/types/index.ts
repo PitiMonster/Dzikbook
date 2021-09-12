@@ -1,5 +1,5 @@
 export type User = {
-  id: string | null;
+  _id: string | null;
   email: string | null;
   name: string | null;
   surname: string | null;
@@ -22,4 +22,26 @@ export type Request = {
   _id: string;
   receiver: User;
   sender: User;
+};
+
+export type Aquaintance = {
+  _id: string;
+  friend: User;
+  chat: string;
+  createdAt: string;
+};
+
+export type Message = {
+  _id: string;
+  author: User;
+  text: string;
+  createdAt: Date;
+  status: string;
+};
+
+export type Chat = {
+  _id: string;
+  members: User[];
+  type: string;
+  messages: Message[];
 };

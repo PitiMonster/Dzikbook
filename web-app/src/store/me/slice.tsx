@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../../types';
 
 const initialState: User = {
-  id: null,
+  _id: null,
   email: null,
   name: null,
   surname: null,
@@ -19,7 +19,7 @@ const meSlice = createSlice({
     setProfileData(
       state,
       action: PayloadAction<{
-        id: string;
+        _id: string;
         email: string;
         name: string;
         surname: string;
@@ -29,9 +29,8 @@ const meSlice = createSlice({
         role: string;
       }>
     ) {
-      console.log('siema funkcja');
       const {
-        id,
+        _id,
         email,
         name,
         surname,
@@ -40,7 +39,7 @@ const meSlice = createSlice({
         profilePhotos,
         role,
       } = action.payload;
-      state.id = id;
+      state._id = _id;
       state.email = email;
       state.name = name;
       state.surname = surname;

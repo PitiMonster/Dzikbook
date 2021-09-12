@@ -4,6 +4,7 @@ import authSlice from './auth/slice';
 import meSlice from './me/slice';
 import postSlice from './post/slice';
 import userSlice from './user/slice';
+import chatSlice from './chat/slice';
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     me: meSlice.reducer,
     post: postSlice.reducer,
     user: userSlice.reducer,
+    chat: chatSlice.reducer,
   },
 });
 
