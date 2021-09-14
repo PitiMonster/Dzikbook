@@ -5,20 +5,22 @@ const crudHandlers = require('./../controllers/handlers');
 
 exports.setAuthorId = (req, res, next) => {
   if (!req.body.author) req.body.author = req.user.id;
-  next();
+  return next();
 };
 
 exports.setQueryAuthor = (req, res, next) => {
   if (!req.query.author) req.query.author = req.params.userId;
-  next();
+  return next();
 };
 
 exports.isAuthor = catchAsync(async (req, res, next) => {
   const post = await Post.findById(req.params.id);
   if (!post.isAuthor(req.user.id)) {
-    next(new AppError('You are not authorized to update this post!', 401));
+    return next(
+      new AppError('You are not authorized to update this post!', 401)
+    );
   }
-  next();
+  return next();
 });
 
 exports.getAllUsersPosts = crudHandlers.getAll(Post, {
