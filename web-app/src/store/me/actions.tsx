@@ -7,7 +7,6 @@ export const getMe = () => {
   return async (dispatch: AppDispatch) => {
     try {
       const response = await api.get('/users/me');
-      console.log();
       const userData = response.data.data.data;
       dispatch(meActions.setProfileData(userData));
       dispatch(getAllPosts(userData.id));

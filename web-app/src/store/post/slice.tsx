@@ -13,11 +13,9 @@ const postsSlice = createSlice({
       state.cachedPosts = action.payload.posts;
     },
     appendPosts(state, action: PayloadAction<{ posts: Post[] }>) {
-      console.log(action.payload.posts);
       state.cachedPosts = [...state.cachedPosts, ...action.payload.posts];
     },
     addNewPost(state, action: PayloadAction<{ post: Post }>) {
-      console.log(action.payload.post);
       state.cachedPosts = [action.payload.post, ...state.cachedPosts];
     },
   },

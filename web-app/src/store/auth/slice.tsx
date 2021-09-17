@@ -37,7 +37,6 @@ const authSlice = createSlice({
       state.isSingupSuccess = isSingupSuccess;
     },
     logout(state, action) {
-      console.log('siema czyszcze');
       state.token = null;
       state.isUserLoggedIn = false;
       state.isSingupSuccess = false;

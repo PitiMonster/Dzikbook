@@ -30,8 +30,6 @@ const userSlice = createSlice({
         role: string;
       }>
     ) {
-      console.log('siema funkcja');
-      console.log(action.payload);
       const {
         _id,
         email,
@@ -52,7 +50,6 @@ const userSlice = createSlice({
       state.role = role;
     },
     setSearchUserResults(state, action: PayloadAction<{ users: User[] }>) {
-      console.log(action.payload.users);
       state.searchedUsers = action.payload.users;
     },
   },

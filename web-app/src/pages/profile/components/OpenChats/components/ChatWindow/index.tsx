@@ -26,13 +26,11 @@ const Chat: React.FC<{ chat: ChatType }> = (props) => {
   useEffect(() => {
     (async () => {
       const newChat = props.chat;
-      console.log(newChat);
       setChatObject(newChat);
     })();
   }, [props.chat]);
 
   useEffect(() => {
-    console.log(chatObject?.messages);
     if (!chatObject) return;
     const newMessages = [...chatObject!.messages]
       .reverse()

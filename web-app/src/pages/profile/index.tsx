@@ -12,8 +12,10 @@ import {
 } from '../../store/user/actions';
 import { getChatById } from '../../store/chat/actions';
 import { getNextTenPosts } from '../../store/post/actions';
-import { Request } from '../../types';
+import { Post, Request } from '../../types';
 import OpenedChats from './components/OpenChats';
+import { runEmitter, runListener } from '../../websockets';
+import { runNotificationSocketListeners } from '../../store/notification/actions';
 
 const ProfilePage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -23,6 +25,7 @@ const ProfilePage: React.FC = () => {
 
   const userProfileData = useAppSelector((store) => store.user);
   const myPosts = useAppSelector((store) => store.post.cachedPosts);
+  const openedChatsId = useAppSelector((store) => store.chat.openedChatsId);
 
   const [postsList, setPostsList] = useState<
     React.DetailedHTMLProps<
@@ -46,6 +49,10 @@ const ProfilePage: React.FC = () => {
       HTMLDivElement
     >[]
   >([]);
+  useEffect(() => {
+    runEmitter('connect notifications', { userId });
+    runListener(runNotificationSocketListeners);
+  }, [userId]);
 
   useEffect(() => {
     const handleScrollToBottom = () => {
@@ -66,7 +73,7 @@ const ProfilePage: React.FC = () => {
 
   useEffect(() => {
     if (myPosts) {
-      const newPostsList = myPosts.map((post) => (
+      const newPostsList = myPosts.map((post: Post) => (
         <div key={post._id}>
           <h4>{`${post.author.name} ${post.author.surname}`}</h4>
           <p>{post.text}</p>
@@ -128,13 +135,16 @@ const ProfilePage: React.FC = () => {
       friendships.map((friendship) => (
         <div
           key={friendship._id}
-          onClick={() => dispatch(getChatById(friendship.chat))}
+          onClick={() => {
+            if (!openedChatsId.includes(friendship.chat))
+              dispatch(getChatById(friendship.chat));
+          }}
         >
           {`${friendship.friend.name} ${friendship.friend.surname}`}
         </div>
       ))
     );
-  }, [userId, dispatch]);
+  }, [userId, dispatch, openedChatsId]);
 
   useEffect(() => {
     dispatch(getUserById(userId));
@@ -153,10 +163,8 @@ const ProfilePage: React.FC = () => {
     answer: string
   ) => {
     const response = await answerAquaintanceRequest(requestId, answer);
-    console.log(response);
     switch (response) {
       case 'accepted':
-        console.log('siema accepted');
         setRequestResponseInfo('Jesteście teraz znajomymi!');
         break;
       case 'rejected':

@@ -18,14 +18,7 @@ const AuthForm: React.FC = (props) => {
   const surnameInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    console.log('SIEMA WSZYSTKO ŚMIGA');
-    console.log(token);
-    console.log(localStorage.getItem('token'));
-  }, [token]);
-
-  useEffect(() => {
     if (isSingupSuccess) {
-      console.log('elo zmieniamy');
       setFormType('signin');
       dispatch(authActions.signup({ isSingupSuccess: false }));
     }

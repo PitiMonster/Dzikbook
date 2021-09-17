@@ -1,6 +1,7 @@
 const runScoket = (io, socket) => {
   socket.on('connect notifications', (data) => {
-    socket.join(params.userId);
+    console.log('connecting notifications: ', data.userId);
+    socket.join(data.userId);
   });
 
   socket.on('send notification', (data) => {

@@ -16,6 +16,7 @@ const runSockets = (io, socket) => {
     console.log('sending msg to chat ', data);
     const { chatId, message, authorId } = data;
     const chat = await Chat.findById(chatId);
+    console.log(chat.members);
 
     if (!chat) {
       return next(new AppError('No chat exists with that ID', 404));
@@ -32,10 +33,15 @@ const runSockets = (io, socket) => {
 
     chat.messages.push(newMessage);
     chat.save();
-    io.to(chatId).emit('new message', {
-      message: newMessage,
-      chatId: chatId,
-    });
+    for (userId of chat.members) {
+      io.to(userId.toString()).emit('new notification', {
+        type: 'message',
+        notification: {
+          message: newMessage,
+          chatId,
+        },
+      });
+    }
   });
 };
 

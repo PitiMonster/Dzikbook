@@ -23,11 +23,9 @@ export const getUsersByNameSurnameUsername =
     try {
       if (text) {
         const regexToSearch = text.split(' ').join('|');
-        console.log();
         const response = await api.get(
           `/users?or=true&name[regex]=${regexToSearch}&surname[regex]=${regexToSearch}&username[regex]=${regexToSearch}`
         );
-        console.log(response.data.data.data);
         dispatch(
           userActions.setSearchUserResults({ users: response.data.data.data })
         );
@@ -76,7 +74,6 @@ export const answerAquaintanceRequest = async (
   try {
     if (!['accept', 'reject'].includes(answer)) return;
     const response = await api.post(`/requests/${requestId}`, { answer });
-    console.log(response);
     return response.data.data;
   } catch (err) {
     console.error('answer AQUAINTANCE REQUEST ERROR: ', err);
@@ -89,7 +86,6 @@ export const getAllUsersFriends = async (
 ): Promise<Aquaintance[]> => {
   try {
     const response = await api.get(`/users/${userId}/friends`);
-    console.log(response);
     return response.data.data.data;
   } catch (err) {
     console.error('GET ALL USERS FRIENDS ERROR: ', err);

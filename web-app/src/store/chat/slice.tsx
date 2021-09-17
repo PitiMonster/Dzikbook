@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { AppDispatch } from '..';
 
 import { Chat, Message } from '../../types';
 
@@ -16,19 +17,13 @@ const chatSlice = createSlice({
   reducers: {
     openChat(state, action: PayloadAction<{ chat: Chat }>) {
       const { chat } = action.payload;
-      console.log(chat);
       if (state.openedChatsId.includes(chat._id)) {
         return;
       }
-      let newOpenedChatsId = [chat._id, ...state.openedChatsId];
       const newOpenedChats = { ...state.openedChats };
       newOpenedChats[chat._id] = chat;
-      if (newOpenedChatsId.length === 4) {
-        delete newOpenedChats[newOpenedChatsId[3]];
-        newOpenedChatsId = newOpenedChatsId.slice(0, 3);
-      }
       state.openedChats = newOpenedChats;
-      state.openedChatsId = newOpenedChatsId;
+      state.openedChatsId = [chat._id, ...state.openedChatsId];
     },
     closeChat(state, action: PayloadAction<{ chatId: string }>) {
       const { chatId } = action.payload;

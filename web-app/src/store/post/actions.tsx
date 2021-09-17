@@ -38,7 +38,6 @@ export const getNextTenPosts =
         `/users/${userId}/posts?limit=10&page=${currPostsAmount / 10 + 1}`
       );
       const posts = response.data.data.data;
-      console.log(posts);
       if (posts.length !== 0) {
         dispatch(postActions.appendPosts({ posts }));
       }

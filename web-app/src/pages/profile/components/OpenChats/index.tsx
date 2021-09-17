@@ -1,10 +1,13 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useAppSelector } from '../../../../hooks';
+import { useAppSelector, useAppDispatch } from '../../../../hooks';
 import classes from './Index.module.scss';
 
 import ChatWindow from './components/ChatWindow';
+import { closeChatById } from '../../../../store/chat/actions';
 
 const OpenChats: React.FC = () => {
+  const dispatch = useAppDispatch();
+
   type openedObjects = {
     [key: string]: React.DetailedHTMLProps<
       React.HTMLAttributes<HTMLDivElement>,
@@ -30,9 +33,12 @@ const OpenChats: React.FC = () => {
       newOpenedChats[openedChatsId[0]] = (
         <ChatWindow chat={openedChats[openedChatsId[0]]} />
       );
+      if (openedChatsId.length === 4) {
+        dispatch(closeChatById(openedChatsId[3]));
+      }
       return newOpenedChats;
     },
-    [openedChats, openedChatsId]
+    [openedChats, openedChatsId, dispatch]
   );
 
   useEffect(() => {

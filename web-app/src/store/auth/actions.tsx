@@ -38,7 +38,6 @@ export const signup = (
         passwordConfirm,
         username,
       });
-      console.log(response.data);
       if (response.data.status === 'success')
         dispatch(
           authActions.signup({

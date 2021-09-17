@@ -5,6 +5,14 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { authActions } from '../../store/auth/slice';
 import { createPost } from '../../store/post/actions';
 import { getUsersByNameSurnameUsername } from '../../store/user/actions';
+import { runNotificationSocketListeners } from '../../store/notification/actions';
+import { User } from '../../types';
+import {
+  runSocket,
+  setDispatch,
+  runListener,
+  runEmitter,
+} from '../../websockets';
 
 const MainPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -22,9 +30,14 @@ const MainPage: React.FC = () => {
     >[]
   >([]);
 
+  // useEffect(() => {
+  //   runSocket();
+  //   setDispatch(dispatch);
+
+  // }, [dispatch, userId]);
+
   // sending search request
   useEffect(() => {
-    console.log(searchText);
     const timerToSendSearchReq: ReturnType<typeof setTimeout> = setTimeout(
       () => {
         dispatch(getUsersByNameSurnameUsername(searchText));
@@ -38,11 +51,10 @@ const MainPage: React.FC = () => {
 
   // creating list of search results
   useEffect(() => {
-    console.log(searchedUsers);
     const newSearchResults: React.DetailedHTMLProps<
       React.HTMLAttributes<HTMLDivElement>,
       HTMLDivElement
-    >[] = searchedUsers.map((user) => (
+    >[] = searchedUsers.map((user: User) => (
       <NavLink to={`/${user._id}`} key={user._id}>
         <p>{`${user.name} ${user.surname}`}</p>
       </NavLink>
@@ -53,9 +65,6 @@ const MainPage: React.FC = () => {
   const logout = () => {
     dispatch(authActions.logout({}));
   };
-
-  console.log(routeMatch.path);
-  console.log(routeMatch.url);
 
   const createNewPost = () => {
     const text = postInputRef.current!.value;

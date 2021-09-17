@@ -11,7 +11,6 @@ export const runSocket = () => {
     upgrade: false,
     rejectUnauthorized: false,
   });
-  //   console.log('emituje');
   //   socket.emit('connect to chat', { chatId: '1234' });
   //   socket.emit('send message', {
   //     chatId: '1234',
@@ -26,6 +25,10 @@ export const setDispatch = (disptachObj: AppDispatch) => {
 
 export const runListener = (listener: Function) => {
   listener(socket, dispatch);
+};
+
+export const offListener = (listener: Function) => {
+  listener(socket);
 };
 
 export const runEmitter = (eventName: string, data: Object) => {
