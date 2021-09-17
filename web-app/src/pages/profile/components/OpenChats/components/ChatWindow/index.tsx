@@ -1,12 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react';
 
-import { getChatById, sendMessage } from '../../../../../../store/chat/actions';
+import {
+  sendMessage,
+  closeChatById,
+} from '../../../../../../store/chat/actions';
 import { Chat as ChatType } from '../../../../../../types';
+import { useAppDispatch } from '../../../../../../hooks';
 import Message from '../Message';
 
 import classes from './index.module.scss';
 
 const Chat: React.FC<{ chat: ChatType }> = (props) => {
+  const dispatch = useAppDispatch();
+
   const [chatObject, setChatObject] = useState<ChatType | null>();
   const [messages, setMessages] = useState<
     | React.DetailedHTMLProps<
@@ -52,6 +58,9 @@ const Chat: React.FC<{ chat: ChatType }> = (props) => {
             ? chatObject.members[1].name
             : chatObject.members[0].name}
         </p>
+        <button onClick={() => dispatch(closeChatById(props.chat._id))}>
+          Zamknij
+        </button>
       </div>
       <div className={classes.messages}>{messages}</div>
       <div className={classes.textInput}>

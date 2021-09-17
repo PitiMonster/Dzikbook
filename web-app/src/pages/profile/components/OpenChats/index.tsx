@@ -36,7 +36,6 @@ const OpenChats: React.FC = () => {
   );
 
   useEffect(() => {
-    console.log('siema repeat');
     setOpenChatObjects(updateOpenedChats);
   }, [openedChats, updateOpenedChats]);
 

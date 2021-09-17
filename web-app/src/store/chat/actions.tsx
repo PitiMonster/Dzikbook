@@ -19,6 +19,17 @@ export const getChatById =
     }
   };
 
+export const closeChatById =
+  (chatId: string) =>
+  async (dispatch: AppDispatch): Promise<void> => {
+    try {
+      runEmitter('disconnect from chat', { chatId });
+      dispatch(chatActions.closeChat({ chatId }));
+    } catch (err) {
+      console.error('CLOSE CHAT BY ID ERROR: ', err);
+    }
+  };
+
 export const sendMessage = async (
   chatId: string,
   message: string

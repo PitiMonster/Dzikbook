@@ -8,7 +8,7 @@ const runSockets = (io, socket) => {
   });
 
   socket.on('disconnect from chat', (data) => {
-    console.log('disconnecting to chat ', data);
+    console.log('disconnecting from chat ', data);
     socket.leave(data.chatId);
   });
 
