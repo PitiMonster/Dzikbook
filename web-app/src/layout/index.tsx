@@ -1,11 +1,12 @@
 import classes from './index.module.scss';
 import Navbar from '../components/Navbar';
-import MainPage from '../pages/main';
+import OpenChats from '../components/OpenChats';
 
 const MainLayout: React.FC = (props) => {
   return (
     <div className={classes.container}>
       <Navbar />
+      <OpenChats />
       {props.children}
     </div>
   );

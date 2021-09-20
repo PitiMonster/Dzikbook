@@ -1,9 +1,9 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useAppSelector, useAppDispatch } from '../../../../hooks';
+import { useAppSelector, useAppDispatch } from '../../hooks';
 import classes from './Index.module.scss';
 
 import ChatWindow from './components/ChatWindow';
-import { closeChatById } from '../../../../store/chat/actions';
+import { closeChatById } from '../../store/chat/actions';
 
 const OpenChats: React.FC = () => {
   const dispatch = useAppDispatch();

@@ -1,11 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 
-import {
-  sendMessage,
-  closeChatById,
-} from '../../../../../../store/chat/actions';
-import { Chat as ChatType } from '../../../../../../types';
-import { useAppDispatch } from '../../../../../../hooks';
+import { sendMessage, closeChatById } from '../../../../store/chat/actions';
+import { Chat as ChatType } from '../../../../types';
+import { useAppDispatch } from '../../../../hooks';
 import Message from '../Message';
 
 import classes from './index.module.scss';

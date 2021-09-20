@@ -1,5 +1,8 @@
 import { io, Socket } from 'socket.io-client';
 import { AppDispatch } from '../store';
+
+import { runNotificationSocketListeners } from '../store/notification/actions';
+
 let dispatch: AppDispatch;
 export let socket: Socket;
 export const runSocket = () => {
@@ -11,6 +14,7 @@ export const runSocket = () => {
     upgrade: false,
     rejectUnauthorized: false,
   });
+
   //   socket.emit('connect to chat', { chatId: '1234' });
   //   socket.emit('send message', {
   //     chatId: '1234',
@@ -21,6 +25,14 @@ export const runSocket = () => {
 
 export const setDispatch = (disptachObj: AppDispatch) => {
   dispatch = disptachObj;
+};
+
+export const runAppListeners = () => {
+  runNotificationSocketListeners(socket, dispatch);
+};
+
+export const runAppEmitters = (userId: string) => {
+  runEmitter('connect notifications', { userId });
 };
 
 export const runListener = (listener: Function) => {

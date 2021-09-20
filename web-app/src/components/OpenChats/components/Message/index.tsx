@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { Message as MessageType } from '../../../../../../types';
+import { Message as MessageType } from '../../../../types';
 import classes from './index.module.scss';
 
 const Message: React.FC<{ message: MessageType }> = (props) => {

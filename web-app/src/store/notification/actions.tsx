@@ -16,7 +16,7 @@ export const runNotificationSocketListeners = (
     switch (type) {
       case 'message':
         const { chatId, message } = notification;
-        console.log('new message: ', notification);
+        console.log('new message: ', message.author);
         message.author = { _id: message.author };
         dispatch(
           chatActions.addNewMessage({

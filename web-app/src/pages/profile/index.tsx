@@ -15,9 +15,12 @@ import {
 import { getChatById } from '../../store/chat/actions';
 import { getNextTenPosts } from '../../store/post/actions';
 import { Post, Request } from '../../types';
-import OpenedChats from './components/OpenChats';
 import { runEmitter, runListener } from '../../websockets';
 import { runNotificationSocketListeners } from '../../store/notification/actions';
+
+import LeftComponent from './components/Left';
+import MainBoard from './components/MainBoard';
+import RightComponent from './components/Right';
 
 const ProfilePage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -51,10 +54,10 @@ const ProfilePage: React.FC = () => {
       HTMLDivElement
     >[]
   >([]);
-  useEffect(() => {
-    runEmitter('connect notifications', { userId });
-    runListener(runNotificationSocketListeners);
-  }, [userId]);
+  // useEffect(() => {
+  //   runEmitter('connect notifications', { userId });
+  //   runListener(runNotificationSocketListeners);
+  // }, [userId]);
 
   useEffect(() => {
     const handleScrollToBottom = () => {
@@ -179,7 +182,10 @@ const ProfilePage: React.FC = () => {
 
   return (
     <div className={classes.container}>
-      <p>I oto mój profil</p>
+      <LeftComponent />
+      <MainBoard />
+      <RightComponent />
+      {/* <p>I oto mój profil</p>
       <p>{userProfileData._id}</p>
       <p>{userProfileData.name}</p>
       <p>{userProfileData.surname}</p>
@@ -200,8 +206,7 @@ const ProfilePage: React.FC = () => {
           {friends}
         </>
       )}
-      <OpenedChats />
-      {postsList}
+      {postsList} */}
     </div>
   );
 };
