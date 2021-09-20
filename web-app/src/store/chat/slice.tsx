@@ -6,9 +6,11 @@ import { Chat, Message } from '../../types';
 const initialState: {
   openedChats: { [key: string]: Chat };
   openedChatsId: string[];
+  unreadMessages: { [key: string]: number };
 } = {
   openedChats: {},
   openedChatsId: [],
+  unreadMessages: {},
 };
 
 const chatSlice = createSlice({
@@ -18,6 +20,7 @@ const chatSlice = createSlice({
     openChat(state, action: PayloadAction<{ chat: Chat }>) {
       const { chat } = action.payload;
       if (state.openedChatsId.includes(chat._id)) {
+        state.openedChats[chat._id] = chat;
         return;
       }
       const newOpenedChats = { ...state.openedChats };
@@ -38,7 +41,12 @@ const chatSlice = createSlice({
       action: PayloadAction<{ message: Message; chatId: string }>
     ) {
       const { chatId, message } = action.payload;
-      state.openedChats[chatId].messages.push(message);
+      if (state.openedChatsId.includes(chatId))
+        state.openedChats[chatId].messages.push(message);
+      else {
+        const currUnreadNum = state.unreadMessages[chatId] ?? 0;
+        state.unreadMessages[chatId] = currUnreadNum + 1;
+      }
     },
   },
 });

@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { useParams, Route, Link, useRouteMatch } from 'react-router-dom';
 
+import classes from './index.module.scss';
+
 import {
   getUserById,
   checkIfFriend,
@@ -176,7 +178,7 @@ const ProfilePage: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className={classes.container}>
       <p>I oto mój profil</p>
       <p>{userProfileData._id}</p>
       <p>{userProfileData.name}</p>

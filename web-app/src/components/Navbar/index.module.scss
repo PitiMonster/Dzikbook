@@ -1,0 +1,13 @@
+.container {
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  grid-area: navbar;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.searchElement {
+  margin: 0;
+}

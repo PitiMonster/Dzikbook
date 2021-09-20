@@ -1,18 +1,17 @@
 import { useRef, useState, useEffect } from 'react';
 import { NavLink, useRouteMatch } from 'react-router-dom';
 
+import classes from './index.module.scss';
+
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { authActions } from '../../store/auth/slice';
 import { createPost } from '../../store/post/actions';
 import { getUsersByNameSurnameUsername } from '../../store/user/actions';
-import { runNotificationSocketListeners } from '../../store/notification/actions';
 import { User } from '../../types';
-import {
-  runSocket,
-  setDispatch,
-  runListener,
-  runEmitter,
-} from '../../websockets';
+
+import LeftElem from './components/Left';
+import MainBoard from './components/MainBoard';
+import FriendsList from './components/FriendsList';
 
 const MainPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -29,12 +28,6 @@ const MainPage: React.FC = () => {
       HTMLDivElement
     >[]
   >([]);
-
-  // useEffect(() => {
-  //   runSocket();
-  //   setDispatch(dispatch);
-
-  // }, [dispatch, userId]);
 
   // sending search request
   useEffect(() => {
@@ -82,26 +75,29 @@ const MainPage: React.FC = () => {
   };
 
   return (
-    <div>
-      <p>Siema zalogowano!</p>
-      <NavLink exact to={`/${localStorage.getItem('userId')}`}>
+    <div className={classes.container}>
+      <LeftElem />
+      <MainBoard />
+      <FriendsList />
+      {/* <p>Siema zalogowano!</p> */}
+      {/* <NavLink exact to={`/${localStorage.getItem('userId')}`}>
         Profil
       </NavLink>
-      <button onClick={logout}>Wyloguj</button>
-      <label>
+      <button onClick={logout}>Wyloguj</button> */}
+      {/* <label>
         <p>Dodaj posta</p>
         <input placeholder="Co tam u Ciebie słychać?" ref={postInputRef} />
       </label>
-      <button onClick={createNewPost}>Dodaj post</button>
-      <label>
+      <button onClick={createNewPost}>Dodaj post</button> */}
+      {/* <label>
         <input
           placeholder="Szukaj na Dzikbooku"
           value={searchText}
           onChange={onChangeSearchText}
         />
-      </label>
-      <button onClick={goToSearchResults}>Wyszukaj</button>
-      {searchResults}
+      </label> */}
+      {/* <button onClick={goToSearchResults}>Wyszukaj</button> */}
+      {/* {searchResults} */}
     </div>
   );
 };

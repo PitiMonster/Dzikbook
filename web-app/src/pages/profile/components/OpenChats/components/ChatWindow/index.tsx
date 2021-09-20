@@ -32,6 +32,7 @@ const Chat: React.FC<{ chat: ChatType }> = (props) => {
 
   useEffect(() => {
     if (!chatObject) return;
+    console.log(chatObject.messages);
     const newMessages = [...chatObject!.messages]
       .reverse()
       .map((el) => <Message message={el} key={el._id} />);
