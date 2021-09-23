@@ -5,6 +5,7 @@ import meSlice from './me/slice';
 import postSlice from './post/slice';
 import userSlice from './user/slice';
 import chatSlice from './chat/slice';
+import notificationSlice from './notification/slice';
 
 const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ const store = configureStore({
     post: postSlice.reducer,
     user: userSlice.reducer,
     chat: chatSlice.reducer,
+    notification: notificationSlice.reducer,
   },
 });
 

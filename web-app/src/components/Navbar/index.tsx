@@ -5,9 +5,10 @@ import { authActions } from '../../store/auth/slice';
 import classes from './index.module.scss';
 
 import SearchBar from '../SearchBar';
+import NotificationsList from './components/Notifications';
 import { getUsersByNameSurnameUsername } from '../../store/user/actions';
 import { User } from '../../types';
-import { ReactNode } from 'react';
+import { ReactNode, useCallback } from 'react';
 
 const Navbar: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -18,9 +19,12 @@ const Navbar: React.FC = () => {
     dispatch(authActions.logout({}));
   };
 
-  const onSearchTextChange = (text: string) => {
-    dispatch(getUsersByNameSurnameUsername(text));
-  };
+  const onSearchTextChange = useCallback(
+    (text: string) => {
+      dispatch(getUsersByNameSurnameUsername(text));
+    },
+    [dispatch]
+  );
   return (
     <div className={classes.container}>
       <SearchBar
@@ -30,17 +34,20 @@ const Navbar: React.FC = () => {
         mapResults={(user: User, index: number, array: User[]): ReactNode => (
           <li key={user._id}>
             <NavLink to={`/${user._id}`}>
-              <p
-                className={classes.searchElement}
-              >{`${user.name} ${user.surname}`}</p>
+              <p className={classes.searchElement}>
+                {`${user.name} ${user.surname}`} {user._id}
+              </p>
             </NavLink>
           </li>
         )}
       />
-      <NavLink exact to={`/${localStorage.getItem('userId')}`}>
-        Profil
-      </NavLink>
-      <button onClick={logout}>Wyloguj</button>
+      <div className={classes.buttons}>
+        <NavLink exact to={`/${localStorage.getItem('userId')}`}>
+          Profil
+        </NavLink>
+        <NotificationsList />
+        <button onClick={logout}>Wyloguj</button>
+      </div>
     </div>
   );
 };

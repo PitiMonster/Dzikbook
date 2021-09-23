@@ -8,6 +8,7 @@ import { authActions } from '../../store/auth/slice';
 import { createPost } from '../../store/post/actions';
 import { getUsersByNameSurnameUsername } from '../../store/user/actions';
 import { User } from '../../types';
+import { runNotificationSocketListeners } from '../../store/notification/actions';
 
 import LeftElem from './components/Left';
 import MainBoard from './components/MainBoard';

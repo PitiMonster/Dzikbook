@@ -5,6 +5,7 @@ import { getAllPosts } from '../post/actions';
 import { userActions } from './slice';
 
 import { Request, Aquaintance } from '../../types';
+import { runEmitter } from '../../websockets';
 
 export const getUserById =
   (userId: string) => async (dispatch: AppDispatch) => {
@@ -51,7 +52,11 @@ export const sendAquaintanceRequest = async (
   friendId: string
 ): Promise<void> => {
   try {
-    await api.post('/requests', { receiver: friendId });
+    // await api.post('/requests', { receiver: friendId });
+    runEmitter('send acquaintance request', {
+      senderId: localStorage.getItem('userId'),
+      receiverId: friendId,
+    });
   } catch (err) {
     console.error('SEND AQUAINTANCE REQUEST ERROR: ', err);
   }

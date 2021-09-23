@@ -9,6 +9,11 @@
   &:focus-within {
     background-color: #fefefe;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    .resultsList {
+      display: flex;
+      flex-direction: column;
+      row-gap: 0.8rem;
+    }
   }
 
   .resultsList {
@@ -49,11 +54,12 @@
     font-size: 0.75rem;
   }
 
-  .searchInput:focus-within {
-    & ~ .resultsList {
-      display: flex;
-      flex-direction: column;
-      row-gap: 0.8rem;
-    }
-  }
+  // .searchInput:focus,
+  // .resultsList:hover {
+  //   & ~ .resultsList {
+  //     display: flex;
+  //     flex-direction: column;
+  //     row-gap: 0.8rem;
+  //   }
+  // }
 }

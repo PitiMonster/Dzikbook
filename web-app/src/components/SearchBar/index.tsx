@@ -11,7 +11,14 @@ const SearchBar: React.FC<{
   mapResults: (value: User, index: number, array: User[]) => ReactNode;
   timeout?: number;
   searchNavLinkTo?: string;
-}> = (props) => {
+}> = ({
+  placeholder,
+  onSearchTextChange,
+  searchResults,
+  mapResults,
+  timeout,
+  searchNavLinkTo,
+}) => {
   const [searchText, setSearchText] = useState<string>('');
   const [results, setResults] = useState<ReactNode[]>([]);
 
@@ -20,32 +27,35 @@ const SearchBar: React.FC<{
     const timerToSendSearchReq: ReturnType<typeof setTimeout> = setTimeout(
       () => {
         // dispatch(getUsersByNameSurnameUsername(searchText));
-        props.onSearchTextChange(searchText);
+        onSearchTextChange(searchText);
       },
-      props.timeout ?? 500
+      timeout ?? 500
     );
     return () => {
       clearTimeout(timerToSendSearchReq);
     };
-  }, [searchText, props]);
+  }, [searchText, onSearchTextChange, timeout]);
 
   useEffect(() => {
-    const newResults: ReactNode[] = props.searchResults.map(props.mapResults);
+    const newResults: ReactNode[] = searchResults.map(mapResults);
     setResults(newResults);
-  }, [props.searchResults, props.mapResults]);
+  }, [searchResults, mapResults]);
 
   return (
     <div className={classes.container}>
       <input
         className={classes.searchInput}
-        placeholder={props.placeholder}
+        placeholder={placeholder}
         value={searchText}
-        onChange={(event) => setSearchText(event.currentTarget.value)}
+        onChange={(event) => {
+          console.log('zmieniam');
+          setSearchText(event.currentTarget.value);
+        }}
       />
       <ul className={classes.resultsList}>
         {results}
         <li>
-          <NavLink to={props.searchNavLinkTo ?? ''}>
+          <NavLink to={searchNavLinkTo ?? ''}>
             <p className={classes.searchLink}>Wyszukaj...</p>
           </NavLink>
         </li>

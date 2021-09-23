@@ -1,0 +1,66 @@
+.container {
+  position: relative;
+  position: flex;
+  justify-content: center;
+  align-items: center;
+
+  & > * {
+    border: 1px solid transparent;
+  }
+
+  &:hover {
+    background-color: #fefefe;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    & > * {
+      border: 1px solid lightgreen;
+    }
+
+    & .notificationsListContainer {
+      display: block;
+      // flex-direction: column;
+      // row-gap: 1rem;
+      // padding: 0.5rem;
+      background-color: #fefefe;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      z-index: 1;
+    }
+
+    .icon {
+      border-bottom: none;
+      position: relative;
+      z-index: 2;
+      background-color: #fefefe;
+    }
+  }
+
+  .icon {
+    padding: 0.2rem 0.5rem 0.3rem 0.5rem;
+  }
+
+  .notificationsListContainer {
+    padding: 0.5rem;
+    margin: 0;
+    position: absolute;
+    display: none;
+    top: 100%;
+    right: 0%;
+    height: 35vh;
+    width: 15vw;
+
+    h4 {
+      margin: 0;
+    }
+
+    .notificationsList {
+      display: flex;
+      flex-direction: column;
+      row-gap: 1rem;
+      padding: 0;
+
+      li {
+        list-style: none;
+      }
+    }
+  }
+}

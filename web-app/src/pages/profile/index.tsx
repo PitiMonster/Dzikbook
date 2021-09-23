@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { useParams, Route, Link, useRouteMatch } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import classes from './index.module.scss';
 
